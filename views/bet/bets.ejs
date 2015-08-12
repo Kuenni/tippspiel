@@ -1,0 +1,61 @@
+<html ng-app = "betsApp">
+	<head>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.1/angular.min.js"></script>
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+		<script src="assets/js/resultsApp.js"></script>
+	</head>
+</html>
+<body ng-Controller = "BetsController">
+	<div class="container">
+		<h1>Bets</h1>
+		<div id="matchesDiv">
+			<div id="choseDayDiv">
+				Spieltag w&auml;hlen:
+				<select ng-model="matchdaySelector" ng-options="(day.value + '. Spieltag') for day in matchdays"
+				ng-change="printSelectedMatchday()" id="matchday-selector"></select>
+				<button class="btn btn-primary" ng-click="updateBets()">
+					Abschicken
+				</button>
+			</div>
+			<div id="successAlert" class="alert alert-success alert-dismissable">
+				<button type="button" class="close" data-dismiss="alert"
+				aria-hidden="true">
+					&times;
+				</button>
+				Ergebnisse eingetragen.
+			</div>
+			<div id="failAlert" class="alert alert-danger alert-dismissable">
+				<button type="button" class="close" data-dismiss="alert"
+				aria-hidden="true">
+					&times;
+				</button>
+				Fehler beim Eintragen der Ergebnisse.
+			</div>
+			<div id="resultsTable">
+				<table class="table table-striped table-hover">
+					<thead>
+						<th>Heim</th>
+						<th>Gast</th>
+						<th align="center">Tore Heim</th>
+						<th></th>
+						<th align="center">Tore Gast</th>
+					</thead>
+					<tr ng-repeat="match in matches">
+						<td>{{match.teamhome}}</td>
+						<td>{{match.teamguest}}</td>
+						<td>
+						<input type="text" class="text-center" ng-model="match.goalshome"/>
+						</td>
+						<td align="center">:</td>
+						<td>
+						<input type="text" class="text-center" ng-model="match.goalsguest"/>
+						</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+	</div>
+</body>

@@ -8,7 +8,12 @@
 module.exports = {
 
   attributes: {
-
-  }
+	  matchday: 'INT',
+	  teamhome: 'STRING',
+	  teamguest:'STRING',
+	  goalshome: 'STRING',
+	  goalsguest: 'STRING',
+	  season: 'STRING'
+		  }
 };
 

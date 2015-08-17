@@ -13,10 +13,6 @@ module.exports = {
 		var username = req.param("username");
 		var password = req.param("password");
 		Users.findByUsername(username).exec(function(err, usr) {
-			if (0)
-				console.log("if 0 ");
-			if (1)
-				console.log("if 1 ");
 			if (err) {
 				console.log("DB Error on signup");
 				res.send(500, {
@@ -28,11 +24,8 @@ module.exports = {
 					error : "Username already Taken"
 				});
 			} else {
-				console.log("user: " + username);
 				var hasher = require("password-hash");
 				password = hasher.generate(password);
-				console.log("user: " + username);
-				console.log("pw: " + password);
 				Users.create({
 					username : username,
 					password : password
@@ -43,7 +36,7 @@ module.exports = {
 						});
 					} else {
 						req.session.user = user;
-						res.send(user);
+						return res.view("bet/bets");
 					}
 				});
 			}
@@ -65,7 +58,7 @@ module.exports = {
 					var hasher = require("password-hash");
 					if (hasher.verify(password, user.password)) {
 						req.session.user = user;
-						res.send(user);
+						return res.view("bet/bets",{"username":user});
 					} else {
 						console.log("wrong pw");
 						res.statusCode = 400;
@@ -114,11 +107,13 @@ module.exports = {
 						res.send(500, {
 							error : "DB Error"
 						});
+						return;
 					}
 					if (results.length == 0) {
 						res.send(500, {
 							error : "DB Empty"
 						});
+						return;
 					}
 					res.send(200, {matches : results});
 				});
@@ -157,14 +152,7 @@ module.exports = {
 			console.log(files[0]);
 			var uploadedFile = files[0].fd;
 			console.log(uploadedFile);
-			// try {
-			// var data = JSON.parse(files[0].fd);
-			// if came to here, then valid
-			// console.log(data);
-			// } catch(e) {
-			// failed to parse
-			// console.log("parse error")
-			// }
+
 			var matchesFile = require(files[0].fd);
 //			for (var i = 0; i < matchesFile.matchdays.length; i++) {
 			matchesFile.matchdays.forEach(function(match,index,array){
@@ -183,8 +171,7 @@ module.exports = {
 								 teamhome: match.teamhome,
 								 teamguest: match.teamguest,
 								 goalshome: match.goalshome,
-								 goalsguest:
-								 match.goalsguest}).exec(console.log);
+								 goalsguest: match.goalsguest}).exec(console.log);
 							}
 							var foundMatch = false;
 							results.forEach(function(result,index2,array2){

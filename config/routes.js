@@ -45,6 +45,10 @@ module.exports.routes = {
 		'/bets/update' : {
 			controller : 'bet',
 			action : 'updateBets'
+		},
+		'/createUserRanking' : {
+			controller : 'main',
+			action : 'createUserRanking'
 		}
 
 };

@@ -50,8 +50,6 @@ module.exports = {
 									console.log("Error on creating new Bet")
 								}
 								resultsLeft -= 1;
-								console.log('created new bet');
-								console.log(newItem);
 								if(resultsLeft == 0){
 									Bets.findByMatchday(matchday).exec(function(err,results){
 										if (err) {
@@ -90,7 +88,6 @@ module.exports = {
 								res.send(500,{error:"Error on update"});
 								return;
 							} else{
-								console.log(updated);
 								if(updated.length = 0){
 									Bets.create(match);
 								}

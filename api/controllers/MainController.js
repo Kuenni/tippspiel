@@ -185,8 +185,6 @@ module.exports = {
 						if(err){
 							console.log('Error on update');
 							console.log(err);
-						} else{
-							console.log(updated);
 						}
 					});
 		});

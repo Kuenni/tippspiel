@@ -9,7 +9,11 @@ module.exports = {
 
   attributes: {
 	  username: 'STRING',
-	  password: 'STRING'
+	  password: 'STRING',
+	  bets: {
+		  collection: 'bets',
+		  via : 'userMod'
+	  }
   }
 };
 

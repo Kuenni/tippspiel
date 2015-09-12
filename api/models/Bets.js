@@ -15,8 +15,11 @@ module.exports = {
 	  goalshome: 'STRING',
 	  goalsguest: 'STRING',
 	  season: 'STRING',
+	  userMod: {
+		  model: 'users'
+	  },
 	  match : {
 		  model: 'results'
-	  }
+	  } 
   }
 };

@@ -14,6 +14,9 @@ module.exports = {
 	  teamguest:'STRING',
 	  goalshome: 'STRING',
 	  goalsguest: 'STRING',
-	  season: 'STRING'
+	  season: 'STRING',
+	  match : {
+		  model: 'results'
+	  }
   }
 };

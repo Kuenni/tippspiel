@@ -14,7 +14,7 @@ module.exports = {
 			if(typeof matchday == "undefined"){
 				matchday = 1;
 			}
-			Bets.findByMatchday(matchday).exec(	function(err, bets) {
+			Bets.findByMatchday(matchday).populateAll().exec(	function(err, bets) {
 				if (err) {
 					console.log("Bets DB Error");
 					res.send(500, {
@@ -39,13 +39,17 @@ module.exports = {
 						}
 						var resultsLeft = results.length;
 						results.forEach(function(match){
-							var newBet = match;
-							delete newBet.id;
-							match.goalshome = -1;
-							match.goalsguest = -1;
-							match.user = req.session.user.username;
-							match.season = SEASON;
-							Bets.create(match).exec(function(err,newItem){
+							var newBet = {
+									user: req.session.user.username,
+									matchday: match.matchday,
+									teamhome: match.teamhome,
+									teamguest:match.teamguest,
+									goalshome: -1,
+									goalsguest: -1,
+									season: SEASON,
+									match : match.id
+							};
+							Bets.create(newBet).exec(function(err,newItem){
 								if(err){
 									console.log("Error on creating new Bet")
 								}
@@ -65,9 +69,9 @@ module.exports = {
 									});
 								}
 							});
-						});
+						});//results forEach
 					});
-				}
+				}// bets found != 0
 				else{
 					res.send(200, {bets : bets});
 				}

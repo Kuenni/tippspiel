@@ -6,7 +6,7 @@
  */
 
 var SEASON = "2015/2016";
-
+var async = require("async");
 module.exports = {
 
 		listBets : function(req, res) {
@@ -47,12 +47,14 @@ module.exports = {
 									goalshome: -1,
 									goalsguest: -1,
 									season: SEASON,
-									match : match.id
+									match : match.id,
+									userMod : req.session.user.id
 							};
 							Bets.create(newBet).exec(function(err,newItem){
 								if(err){
 									console.log("Error on creating new Bet")
 								}
+								Bets.find().populateAll();
 								resultsLeft -= 1;
 								if(resultsLeft == 0){
 									Bets.findByMatchday(matchday).exec(function(err,results){
@@ -83,9 +85,8 @@ module.exports = {
 			matches.forEach(function(match){
 				Bets.update({id:match.id},
 						{	goalshome:match.goalshome,
-							goalsguest:match.goalsguest,
-							user:req.session.user.username,
-							season:SEASON }).exec(function(err,updated){
+							goalsguest:match.goalsguest
+							}).exec(function(err,updated){
 							if(err){
 								console.log('Error on update');
 								console.log(err);
@@ -104,6 +105,14 @@ module.exports = {
 			});
 		},
 		bets : function(req,res){
-			res.view();
+			Users.findByUsername(req.session.user.username).populateAll().exec(function(err,users){
+				async.parallel({
+					correct: users[0].getNumberCorrectBets
+				},function(err,results){
+					console.log("async result");
+					console.log(results);
+					res.view({test: results.correct});
+				});
+			});
 		}
 };

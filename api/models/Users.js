@@ -14,14 +14,33 @@ module.exports = {
 		  collection: 'bets',
 		  via : 'userMod'
 	  },
-	  getNumberCorrectBets : function(){
+	  getNumberCorrectBets : function(callback){
 		  var correctCounter = 0;
+		  Bets.find({user:this.user.username}).populateAll().exec(function(err,bets){
+			  if(err){
+				  console.log("Get correct bets error");
+				  console.log(err);
+			  }
+			  console.log("Counting correct Bets");
+			  bets.forEach(function(bet){
+				  if(bet.getBetResultCode() == 3){
+					  correctCounter += 1;
+				  }
+				  console.log("count" + correctCounter);
+			  });
+			  console.log("Done");
+			  callback(null,correctCounter);
+		  });
+/*		  
+		  console.log("User bets");
+		  console.log(this.bets);
 		  this.bets.forEach(function(bet){
 			  if(bet.getBetResultCode() == 3){
 				  correctCounter += 1;
 			  }
+			  console.log(correctCounter);
 		  });
-		  return correctCounter;
+		  return correctCounter;*/
 	  },
 	  getNumberDifferenceBets : function(){},
 	  getNumberTendencyBets : function(){}

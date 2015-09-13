@@ -13,7 +13,18 @@ module.exports = {
 	  bets: {
 		  collection: 'bets',
 		  via : 'userMod'
-	  }
+	  },
+	  getNumberCorrectBets : function(){
+		  var correctCounter = 0;
+		  this.bets.forEach(function(bet){
+			  if(bet.getBetResultCode() == 3){
+				  correctCounter += 1;
+			  }
+		  });
+		  return correctCounter;
+	  },
+	  getNumberDifferenceBets : function(){},
+	  getNumberTendencyBets : function(){}
   }
 };
 

@@ -14,7 +14,8 @@ module.exports = {
 			if(typeof matchday == "undefined"){
 				matchday = 1;
 			}
-			Bets.findByMatchday(matchday).populateAll().exec(	function(err, bets) {
+			var username = req.session.user.username;
+			Bets.find({matchday: matchday, user : username}).populateAll().exec(	function(err, bets) {
 				if (err) {
 					console.log("Bets DB Error");
 					res.send(500, {
@@ -40,7 +41,7 @@ module.exports = {
 						var resultsLeft = results.length;
 						results.forEach(function(match){
 							var newBet = {
-									user: req.session.user.username,
+									user: username,
 									matchday: match.matchday,
 									teamhome: match.teamhome,
 									teamguest:match.teamguest,
@@ -80,39 +81,44 @@ module.exports = {
 			});
 		},
 		updateBets: function(req,res){
-			var matches = req.param("matches");
-			var matchesLeft = matches.length;
-			matches.forEach(function(match){
-				Bets.update({id:match.id},
-						{	goalshome:match.goalshome,
-							goalsguest:match.goalsguest
-							}).exec(function(err,updated){
-							if(err){
-								console.log('Error on update');
-								console.log(err);
-								res.send(500,{error:"Error on update"});
-								return;
-							} else{
-								if(updated.length = 0){
-									Bets.create(match);
-								}
-								matchesLeft -= 1;
-							}
-							if(matchesLeft == 0){
-								res.send(200);
-							}
-						});
+			var allBets = req.param("matches");
+			var matchesLeft = allBets.length;
+			var matchday = req.param("matchday");
+			var username = req.session.user.username;
+			allBets.forEach(function(bet){
+				Bets.update({user : username,
+					matchday:matchday,match:bet.match.id},
+					{goalshome:bet.goalshome,goalsguest : bet.goalsguest}).exec(function(err,localBet){
+						if(err){
+							console.log("Error on bets update");
+							res.send(500);
+							return;
+						}
+						matchesLeft -= 1;
+						if(matchesLeft == 0){
+							Users.findOne({username : username}).populateAll().exec(function(err,user){
+								user.getNumberCorrectBets(function(err,correct){
+									user.nCorrect = correct;
+									user.save();
+								});
+								user.getNumberDifferenceBets(function(err,difference){
+									user.nDiff = difference;
+									user.save();
+								});
+								user.getNumberTendencyBets(function(err,tendency){
+									user.nTrend = tendency;
+									user.save();
+								});
+							});
+							res.send(200);
+						}
+					});
 			});
 		},
 		bets : function(req,res){
 			Users.findByUsername(req.session.user.username).populateAll().exec(function(err,users){
-				async.parallel({
-					correct: users[0].getNumberCorrectBets
-				},function(err,results){
-					console.log("async result");
-					console.log(results);
-					res.view({test: results.correct});
-				});
+				console.log('/bets User: ' + users[0].username + ' nCorrect: ' + users[0].nCorrect);
+				res.view({test: users[0].nCorrect});
 			});
 		}
 };

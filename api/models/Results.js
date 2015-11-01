@@ -11,8 +11,8 @@ module.exports = {
 	  matchday: 'INT',
 	  teamhome: 'STRING',
 	  teamguest:'STRING',
-	  goalshome: 'STRING',
-	  goalsguest: 'STRING',
+	  goalshome: 'INT',
+	  goalsguest: 'INT',
 	  season: 'STRING'
 		  }
 };

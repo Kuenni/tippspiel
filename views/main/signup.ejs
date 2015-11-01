@@ -1,0 +1,57 @@
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.1/angular.min.js"></script>
+
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+
+<!-- Optional theme -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css">
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+<body>
+	<div class="container-fluid">
+		<h1>Tippspiel Anmeldung</h1>
+		<div>
+			<h3><span class="label label-default"> Signup </span></h3>
+			<form class="form-inline" id="signup-form">
+				<div class="form-group">
+					<label for="signupName">Name</label>
+					<input type="text" id="signupName" placeholder="name" />
+				</div>
+				<div class="form-group">
+					<label for="signupPassword">Password</label>
+					<input type="password" id="signupPassword" placeholder="password" />
+				</div>
+				<div class="form-group">
+					<label for="signupConfirmPassword">Repeat Password</label>
+					<input type="password" id="signupConfirmPassword" placeholder="confirm password" />
+				</div>
+				<button type="submit" class="btn btn-primary" id="signupButton">
+					Signup
+				</button>
+			</form>
+		</div>
+	</div>
+	<script>
+			$("#signupButton").click(function() {
+			var username = $("#signupName").val();
+			var password = $("#signupPassword").val();
+			var confirmPassword = $("#signupConfirmPassword").val();
+			if (username && password) {
+				if (password === confirmPassword) {
+					$.post('/signup', {
+						username : username,
+						password : password
+					}).fail(function(res) {
+						alert("Error alert: " + res.getResponseHeader("error"));
+					});
+				} else {
+					alert("Passwords don't match");
+				}
+			} else {
+				alert("A username and password is required");
+			}
+		});
+		</script>
+</body>

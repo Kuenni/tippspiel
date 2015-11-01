@@ -10,6 +10,10 @@ module.exports = {
 		res.view();
 	},
 	signup : function(req, res) {
+		if (req.method === 'GET'){
+			res.view();
+			return;
+		}
 		var username = req.param("username");
 		var password = req.param("password");
 		Users.findByUsername(username).exec(function(err, usr) {
@@ -86,36 +90,15 @@ module.exports = {
 			if(err){
 				//TODO
 			}
-			
-			async.each(users,function(user,callback){
-				async.parallel({
-					correct: function(cb){user.getNumberCorrectBets(
-							function(err,nCorrect){cb(err,nCorrect)}
-					)},
-					difference : function(cb){user.getNumberDifferenceBets(
-							function(err,nDiff){cb(err,nDiff)}
-					)},
-					tendency : function(cb){user.getNumberTendencyBets(
-							function(err,nTend){cb(err,nTend)}
-					)}
-				},function(err,results){
-					if(err){
-						callback(err);
-					}
-					rankings.push({
-						user:user.username,
-						correct: results.correct,
-						difference : results.difference,
-						tendency: results.tendency
-						});
-					callback();
-				});
-			},function eachUserDone(err){
-				if(err){
-					res.send(500,{error:"Some error on user ranking"});
-				}
-				res.send({userRankings:rankings});
+			users.forEach(function(user){
+				rankings.push({
+					user:user.username,
+					correct: user.nCorrect,
+					difference : user.nDiff,
+					tendency: user.nTrend
+				});				
 			});
+			res.send({userRankings:rankings});
 		});
 	},
 	results : function(req, res) {

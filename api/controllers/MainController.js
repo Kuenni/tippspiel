@@ -75,62 +75,46 @@ module.exports = {
 			}
 		});
 	},
+	getUser : function(req,res){
+		if (req.session.user){
+			res.json({username:user.username});
+		}
+	},
 	createUserRanking:function(req,res){
-		Users.find().exec(function(err,foundList){
+		Users.find().exec(function(err,users){
 			var rankings = [];
 			if(err){
 				//TODO
 			}
-			var namesLeft = foundList.length;
-			foundList.forEach(function(name){
-				namesLeft -= 1;
-				name = name.username;
-				var ranking = {username : name,
-					correct : 0,
-					difference : 0,
-					tenedency : 0
-				};
-				Bets.findByUser(name).where({
-					goalshome	: {'>':-1},
-					goalsguest 	: {'>':-1}
-				}).exec(function(err,betList){
+			
+			async.each(users,function(user,callback){
+				async.parallel({
+					correct: function(cb){user.getNumberCorrectBets(
+							function(err,nCorrect){cb(err,nCorrect)}
+					)},
+					difference : function(cb){user.getNumberDifferenceBets(
+							function(err,nDiff){cb(err,nDiff)}
+					)},
+					tendency : function(cb){user.getNumberTendencyBets(
+							function(err,nTend){cb(err,nTend)}
+					)}
+				},function(err,results){
 					if(err){
-						//TODO
-						console.log(err);
+						callback(err);
 					}
-					var betsLeft = betList.length;
-					betList.forEach(function(bet){
-						betsLeft -= 1;
-						Results.findByMatchday(bet.matchday).where({
-							teamhome:bet.teamhome,
-							goalshome: {'>':'-1'},
-							goalsguest: {'>':'-1'}
-							}).exec(function(err,resultList){
-							var resultsLeft = resultList.length;
-							console.log(resultList);
-							resultList.forEach(function(result){
-								resultsLeft -= 1;
-								console.log(resultsLeft);
-								console.log(result)
-								var deltaGoalsResult = result.goalshome - result.goalsguest;
-								var deltaGoalsBet = bet.goalshome - bet.goalsguest;
-								if(result.goalshome == bet.goalshome && result.goalsguest == bet.goalsguest){
-									ranking.correct += 1;
-								} else if (deltaGoalsResult == deltaGoalsBet){
-									ranking.difference += 1;
-								} else if(Math.sign(deltaGoalsResult) == Math.sign(deltaGoalsBet)){
-									ranking.tendency += 1;
-								}
-								if(!betsLeft && !resultsLeft){
-									rankings.push(ranking);
-								}
-								if(!namesLeft && !betsLeft && !resultsLeft){
-									res.send(rankings);
-								}
-							});
+					rankings.push({
+						user:user.username,
+						correct: results.correct,
+						difference : results.difference,
+						tendency: results.tendency
 						});
-					});
+					callback();
 				});
+			},function eachUserDone(err){
+				if(err){
+					res.send(500,{error:"Some error on user ranking"});
+				}
+				res.send({userRankings:rankings});
 			});
 		});
 	},

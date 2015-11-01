@@ -16,10 +16,10 @@ module.exports = {
 			goalsguest: 'INT',
 			season: 'STRING',
 			userMod: {
-				model: 'users'
+				model: 'user'
 			},
 			match : {
-				model: 'results'
+				model: 'result'
 			},
 			getBetResultCode : function(){
 				if (this.match.goalsguest == -1 || this.match.goalshome == -1 || this.goalsguest == -1 || this.goalshome == -1 ){

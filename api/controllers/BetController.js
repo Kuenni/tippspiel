@@ -15,7 +15,7 @@ module.exports = {
 				matchday = 1;
 			}
 			var username = req.session.user.username;
-			Bets.find({matchday: matchday, user : username}).populateAll().exec(	function(err, bets) {
+			Bet.find({matchday: matchday, user : username}).populateAll().exec(	function(err, bets) {
 				if (err) {
 					console.log("Bets DB Error");
 					res.send(500, {
@@ -24,7 +24,7 @@ module.exports = {
 					return;
 				}
 				if(bets.length == 0){
-					Results.findByMatchday(matchday).exec(function(err, results) {
+					Result.findByMatchday(matchday).exec(function(err, results) {
 						if (err) {
 							console.log("Results DB Error");
 							res.send(500, {
@@ -51,14 +51,14 @@ module.exports = {
 									match : match.id,
 									userMod : req.session.user.id
 							};
-							Bets.create(newBet).exec(function(err,newItem){
+							Bet.create(newBet).exec(function(err,newItem){
 								if(err){
 									console.log("Error on creating new Bet")
 								}
-								Bets.find().populateAll();
+								Bet.find().populateAll();
 								resultsLeft -= 1;
 								if(resultsLeft == 0){
-									Bets.findByMatchday(matchday).exec(function(err,results){
+									Bet.findByMatchday(matchday).exec(function(err,results){
 										if (err) {
 											console.log("Results DB Error");
 											res.send(500, {
@@ -86,7 +86,7 @@ module.exports = {
 			var matchday = req.param("matchday");
 			var username = req.session.user.username;
 			allBets.forEach(function(bet){
-				Bets.update({user : username,
+				Bet.update({user : username,
 					matchday:matchday,match:bet.match.id},
 					{goalshome:bet.goalshome,goalsguest : bet.goalsguest}).exec(function(err,localBet){
 						if(err){
@@ -96,7 +96,7 @@ module.exports = {
 						}
 						matchesLeft -= 1;
 						if(matchesLeft == 0){
-							Users.findOne({username : username}).populateAll().exec(function(err,user){
+							User.findOne({username : username}).populateAll().exec(function(err,user){
 								user.getNumberCorrectBets(function(err,correct){
 									user.nCorrect = correct;
 									user.save();
@@ -116,7 +116,7 @@ module.exports = {
 			});
 		},
 		bets : function(req,res){
-			Users.findByUsername(req.session.user.username).populateAll().exec(function(err,users){
+			User.findByUsername(req.session.user.username).populateAll().exec(function(err,users){
 				console.log('/bets User: ' + users[0].username + ' nCorrect: ' + users[0].nCorrect);
 				res.view({test: users[0].nCorrect});
 			});

@@ -16,7 +16,7 @@ module.exports = {
 		}
 		var username = req.param("username");
 		var password = req.param("password");
-		Users.findByUsername(username).exec(function(err, usr) {
+		User.findByUsername(username).exec(function(err, usr) {
 			if (err) {
 				console.log("DB Error on signup");
 				res.send(500, {
@@ -30,7 +30,7 @@ module.exports = {
 			} else {
 				var hasher = require("password-hash");
 				password = hasher.generate(password);
-				Users.create({
+				User.create({
 					username : username,
 					password : password
 				}).exec(function(error, user) {
@@ -50,7 +50,7 @@ module.exports = {
 		var username = req.param("username");
 		var password = req.param("password");
 
-		Users.findByUsername(username).exec(function(err, usr) {
+		User.findByUsername(username).exec(function(err, usr) {
 			if (err) {
 				console.log("DB Error");
 				res.send(500, {
@@ -85,7 +85,7 @@ module.exports = {
 		}
 	},
 	createUserRanking:function(req,res){
-		Users.find().exec(function(err,users){
+		User.find().exec(function(err,users){
 			var rankings = [];
 			if(err){
 				//TODO
@@ -106,7 +106,7 @@ module.exports = {
 		if(typeof matchday == "undefined"){
 			matchday = 1
 		}
-		Results.findByMatchday(matchday).exec(
+		Result.findByMatchday(matchday).exec(
 				function(err, results) {
 					if (err) {
 						console.log("DB Error");
@@ -126,7 +126,7 @@ module.exports = {
 
 	},
 	listMatchday : function(req, res) {
-		Results.findByMatchday(req.param("matchday")).exec(
+		Result.findByMatchday(req.param("matchday")).exec(
 				function(err, results) {
 					if (err) {
 						console.log("DB Error");
@@ -147,7 +147,7 @@ module.exports = {
 	updateResults: function(req,res){
 		var matches = req.param("matches");
 		matches.forEach(function(match){
-			Results.update({id:match.id},
+			Result.update({id:match.id},
 					{goalshome:match.goalshome,goalsguest:match.goalsguest}).exec(function(err,updated){
 						if(err){
 							console.log('Error on update');
@@ -179,7 +179,7 @@ module.exports = {
 			var matchesFile = require(files[0].fd);
 			matchesFile.matchdays.forEach(function(match,index,array){
 				console.log(match.matchday);
-				Results.find({matchday:match.matchday}).exec(
+				Result.find({matchday:match.matchday}).exec(
 						function(err, results) {
 							console.log(results);
 							if (err) {
@@ -187,7 +187,7 @@ module.exports = {
 							}
 							if (results.length == 0) {
 								console.log("No data found for matchday");
-								 Results.create({
+								 Result.create({
 								 matchday: match.matchday,
 								 teamhome: match.teamhome,
 								 teamguest: match.teamguest,
@@ -207,7 +207,7 @@ module.exports = {
 							//durchlaufen wird
 							if (!foundMatch) {
 								console.log("TEst");
-//								Results.create({
+//								Result.create({
 //									matchday : match.matchday,
 //									teamhome : match.teamhome,
 //									teamguest : match.teamguest,

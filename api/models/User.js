@@ -14,12 +14,12 @@ module.exports = {
 			nDiff: 'INT',
 			nTrend: 'INT',
 			bets: {
-				collection: 'bets',
+				collection: 'bet',
 				via : 'userMod'
 			},
 			getNumberCorrectBets : function(callback){
 				var correctCounter = 0;
-				Bets.find({user:this.username}).populateAll().exec(function(err,bets){
+				Bet.find({user:this.username}).populateAll().exec(function(err,bets){
 					if(err){
 						console.log("Get correct bets error");
 						console.log(err);
@@ -34,7 +34,7 @@ module.exports = {
 			},
 			getNumberDifferenceBets : function(callback){
 				var differenceCounter = 0;
-				Bets.find({user:this.username}).populateAll().exec(function(err,bets){
+				Bet.find({user:this.username}).populateAll().exec(function(err,bets){
 					if(err){
 						console.log("Get difference bets error");
 						console.log(err);
@@ -49,7 +49,7 @@ module.exports = {
 			},
 			getNumberTendencyBets : function(callback){
 				var tendencyCounter = 0;
-				Bets.find({user:this.username}).populateAll().exec(function(err,bets){
+				Bet.find({user:this.username}).populateAll().exec(function(err,bets){
 					if(err){
 						console.log("Get difference bets error");
 						console.log(err);

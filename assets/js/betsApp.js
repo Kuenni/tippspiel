@@ -62,7 +62,9 @@ betsApp.controller('BetsController', function($scope, $http, $log) {
 			method : "POST",
 			url : "/bets/update",
 			data : {
-				matches : matches
+				matches 	: matches,
+				username 	: $scope.username,
+				matchday	: $scope.matchdaySelector.value
 			}
 		}).success(function(data) {
 			$("#successAlert").alert();

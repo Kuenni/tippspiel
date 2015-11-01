@@ -10,102 +10,62 @@
 <!-- Latest compiled and minified JavaScript -->
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
 <body ng-app="mainPageApp">
-<div class="container-fluid">
-	<h1>Tippspiel Login</h1>
-	<div>
-		<h3><span class="label label-default"> Login </span></h3>
-		<form class="form-inline" id="login-form">
-			<div class="form-group">
-				<label for="loginName">Name</label>
-				<input type="text" id="loginName" placeholder="name" class="form-control" />
-			</div>
-			<div class="form-group">
-				<label for="loginPassword">Password</label>
-				<input type="password" id="loginPassword" placeholder="password" class="form-control" />
-			</div>
-			<button type="submit" class="btn btn-primary">
-				Login
-			</button>
-		</form>
-	</div>
-	<div>
-		<h3><span class="label label-default"> Signup </span></h3>
-		<form class="form-inline" id="signup-form">
-			<div class="form-group">
-				<label for="signupName">Name</label>
-				<input type="text" id="signupName" placeholder="name" />
-			</div>
-			<div class="form-group">
-				<label for="signupPassword">Password</label>
-				<input type="password" id="signupPassword" placeholder="password" />
-			</div>
-			<div class="form-group">
-				<label for="signupConfirmPassword">Repeat Password</label>
-				<input type="password" id="signupConfirmPassword" placeholder="confirm password" />
-			</div>
-			<button type="submit" class="btn btn-primary" id="signupButton">
-				Signup
-			</button>
-		</form>
-	</div>
-	<div id="userRanking" ng-controller="MainPageController" ng-init="getRanking()">
-				<table class="table table-striped table-hover">
-					<thead>
-						<th>User</th>
-						<th>Correct</th>
-						<th align="center">Difference</th>
-						<th align="center">Tendency</th>
-					</thead>
-					<tr ng-repeat="item in userRankings">
-						<td>{{item.user}}</td>
-						<td>{{item.correct}}</td>
-						<td>{{item.difference}}</td>
-						<td>{{item.tendency}}</td>
-					</tr>
-				</table>
-			</div>
-	<script>
-		$("#login-form").submit(function() {
-			var username = $("#loginName").val();
-			var password = $("#loginPassword").val();
-			if (username && password) {
-				$.post('/login', {
-					username : username,
-					password : password
-				}, function() {
-					window.location = "/bets";
-				}).fail(function(res, textStatus, err) {
-					console.log("res: " + res);
-					console.log("status: " + textStatus);
-					console.log("err: " + err);
-					var responseJSON = $.parseJSON(res.responseText);
-					alert("Error: " + responseJSON.error);
-				});
-			} else {
-				alert("A username and password is required");
-			}
-			return false;
-		});
-		$("#signupButton").click(function() {
-			var username = $("#signupName").val();
-			var password = $("#signupPassword").val();
-			var confirmPassword = $("#signupConfirmPassword").val();
-			if (username && password) {
-				if (password === confirmPassword) {
-					$.post('/signup', {
+	<div class="container-fluid">
+		<h1>Tippspiel Login</h1>
+		<div>
+			<h3><span class="label label-default"> Login </span></h3>
+			<form class="form-inline" id="login-form">
+				<div class="form-group">
+					<label for="loginName">Name</label>
+					<input type="text" id="loginName" placeholder="name" class="form-control" />
+				</div>
+				<div class="form-group">
+					<label for="loginPassword">Password</label>
+					<input type="password" id="loginPassword" placeholder="password" class="form-control" />
+				</div>
+				<button type="submit" class="btn btn-primary">
+					Login
+				</button>
+			</form>
+		</div>
+		<div id="userRanking" ng-controller="MainPageController" ng-init="getRanking()">
+			<table class="table table-striped table-hover">
+				<thead>
+					<th>User</th>
+					<th>Correct</th>
+					<th align="center">Difference</th>
+					<th align="center">Tendency</th>
+				</thead>
+				<tr ng-repeat="item in userRankings">
+					<td>{{item.user}}</td>
+					<td>{{item.correct}}</td>
+					<td>{{item.difference}}</td>
+					<td>{{item.tendency}}</td>
+				</tr>
+			</table>
+		</div>
+		<script>
+			$("#login-form").submit(function() {
+				var username = $("#loginName").val();
+				var password = $("#loginPassword").val();
+				if (username && password) {
+					$.post('/login', {
 						username : username,
 						password : password
-					}).fail(function(res) {
-						alert("Error alert: " + res.getResponseHeader("error"));
+					}, function() {
+						window.location = "/bets";
+					}).fail(function(res, textStatus, err) {
+						console.log("res: " + res);
+						console.log("status: " + textStatus);
+						console.log("err: " + err);
+						var responseJSON = $.parseJSON(res.responseText);
+						alert("Error: " + responseJSON.error);
 					});
 				} else {
-					alert("Passwords don't match");
+					alert("A username and password is required");
 				}
-			} else {
-				alert("A username and password is required");
-			}
-		});
-		
-			</script>
-</div>
+				return false;
+			});
+		</script>
+	</div>
 </body>

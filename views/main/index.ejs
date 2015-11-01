@@ -9,6 +9,7 @@
 
 <!-- Latest compiled and minified JavaScript -->
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+<body ng-app="mainPageApp">
 <div class="container-fluid">
 	<h1>Tippspiel Login</h1>
 	<div>
@@ -47,6 +48,22 @@
 			</button>
 		</form>
 	</div>
+	<div id="userRanking" ng-controller="MainPageController" ng-init="getRanking()">
+				<table class="table table-striped table-hover">
+					<thead>
+						<th>User</th>
+						<th>Correct</th>
+						<th align="center">Difference</th>
+						<th align="center">Tendency</th>
+					</thead>
+					<tr ng-repeat="item in userRankings">
+						<td>{{item.user}}</td>
+						<td>{{item.correct}}</td>
+						<td>{{item.difference}}</td>
+						<td>{{item.tendency}}</td>
+					</tr>
+				</table>
+			</div>
 	<script>
 		$("#login-form").submit(function() {
 			var username = $("#loginName").val();
@@ -88,5 +105,7 @@
 				alert("A username and password is required");
 			}
 		});
-	</script>
+		
+			</script>
 </div>
+</body>

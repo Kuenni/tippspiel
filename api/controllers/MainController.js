@@ -194,9 +194,7 @@ module.exports = {
 			console.log(uploadedFile);
 
 			var matchesFile = require(files[0].fd);
-//			for (var i = 0; i < matchesFile.matchdays.length; i++) {
 			matchesFile.matchdays.forEach(function(match,index,array){
-//				match = matchesFile.matchdays[i];
 				console.log(match.matchday);
 				Results.find({matchday:match.matchday}).exec(
 						function(err, results) {

@@ -10,6 +10,11 @@ betsApp.controller('BetsController', function($scope, $http, $log) {
 			"value" : i
 		});
 	};
+	//Get the username for the logged-in user
+	$http({method: 'GET',
+		url : '/user'}).success(function(data){
+			$scope.user = data.username;
+		})
 	$(document).ready(function() {
 		$("#successAlert").hide();
 		$("#failAlert").hide();
@@ -21,7 +26,8 @@ betsApp.controller('BetsController', function($scope, $http, $log) {
 			method : "POST",
 			url : "/listBets",
 			data : {
-				matchday : $scope.matchdaySelector.value
+				matchday : $scope.matchdaySelector.value,
+				username : $scope.username
 			}
 		}).success(function(data) {
 			var result = data.bets;

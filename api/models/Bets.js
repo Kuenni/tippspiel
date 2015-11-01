@@ -27,11 +27,16 @@ module.exports = {
 				}
 				var deltaGoalsResult = this.match.goalshome - this.match.goalsguest;
 				var deltaGoalsBet = this.goalshome - this.goalsguest;
+				//Correct bet
 				if(this.match.goalshome == this.goalshome && this.match.goalsguest == this.goalsguest){
 					return 3;
-				} else if (deltaGoalsResult == deltaGoalsBet){
+				}
+				//Correct difference
+				else if (deltaGoalsResult == deltaGoalsBet){
 					return 2;
-				} else if(Math.sign(deltaGoalsResult) == Math.sign(deltaGoalsBet)){
+				}
+				//Correct tendency
+				else if(Math.sign(deltaGoalsResult) == Math.sign(deltaGoalsBet)){
 					return 1;
 				}
 				return 0;

@@ -6,7 +6,6 @@
  */
 
 var SEASON = "2015/2016";
-var async = require("async");
 module.exports = {
 
 		listBets : function(req, res) {

@@ -47,6 +47,10 @@ module.exports = {
 			});
 		},
 		login : function(req, res) {
+			if (req.method === 'GET'){
+				res.view();
+				return;
+			}
 			var username = req.param("username");
 			var password = req.param("password");
 
@@ -62,7 +66,8 @@ module.exports = {
 						var hasher = require("password-hash");
 						if (hasher.verify(password, user.password)) {
 							req.session.user = user;
-							return res.redirect("bet/bets");
+							req.session.authenticated = true;
+							return res.redirect("/bets");
 						} else {
 							console.log("wrong pw");
 							res.statusCode = 400;
@@ -192,9 +197,8 @@ module.exports = {
 									errorFlag = true;
 								}
 								if (results.length == 0) {
-									console.log("No data found for matchday " + match.matchday);
 									if(!match.teamhome || !match.teamguest){
-										console.log('Parameter teamhome of teamguest not found!');
+										console.log('Parameter teamhome or teamguest not found!');
 										errorFlag = true;
 									} else{
 										Result.create({

@@ -205,8 +205,8 @@ module.exports = {
 											matchday: match.matchday,
 											teamhome: match.teamhome,
 											teamguest: match.teamguest,
-											goalshome: match.goalshome,
-											goalsguest: match.goalsguest}).exec(function(){
+											goalshome: -1,
+											goalsguest: -1}).exec(function(){
 												if(index == (array.length-1) && !errorFlag){
 													res.send(200);													
 												}

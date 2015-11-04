@@ -165,54 +165,55 @@ module.exports = {
 				});
 			// Call to /upload via GET is error
 			var file = req.file('jsonfile');
-
+			var errorFlag = false;
 			file.upload(function onUploadComplete(err, files) {
 				// Files will be uploaded to .tmp/uploads
 				if (err)
 					return res.serverError(err);
 				// IF ERROR Return and send 500 error with error
-
-				console.log(files[0]);
 				var uploadedFile = files[0].fd;
-				console.log(uploadedFile);
-
 				var matchesFile = require(files[0].fd);
 				if(!matchesFile.matchdays){
 					console.log('Parameter matchdays not found!');
-					res.send(415,{error:'Parameter matchdays not found!'});
+					res.send(415,{message:'Parameter matchdays not found!'});
 					return;
 				}
 				matchesFile.matchdays.forEach(function(match,index,array){
-					console.log(match.matchday);
 					if(!match.matchday){
 						console.log('Parameter matchday not found!');
-						return;
+						errorFlag = true;
+						match.matchday = -1;
 					}
 					Result.find({matchday:match.matchday,teamhome:match.teamhome}).exec(
 							function(err, results) {
-								console.log(results);
+								console.log(index);
 								if (err) {
 									console.log("DB Error in addMatchData");
+									errorFlag = true;
 								}
 								if (results.length == 0) {
 									console.log("No data found for matchday " + match.matchday);
 									if(!match.teamhome || !match.teamguest){
 										console.log('Parameter teamhome of teamguest not found!');
-										return;
+										errorFlag = true;
+									} else{
+										Result.create({
+											matchday: match.matchday,
+											teamhome: match.teamhome,
+											teamguest: match.teamguest,
+											goalshome: match.goalshome,
+											goalsguest: match.goalsguest}).exec(function(){
+												if(index == (array.length-1) && !errorFlag){
+													res.send(200);													
+												}
+											});
 									}
-									Result.create({
-										matchday: match.matchday,
-										teamhome: match.teamhome,
-										teamguest: match.teamguest,
-										goalshome: match.goalshome,
-										goalsguest: match.goalsguest}).exec(console.log);
+								}
+								//TODO: Remove tmp file
+								if(index == array.length -1 && errorFlag){
+									res.send(415,{message : 'Error when processing JSON file'});
 								}
 							});
-				});
-				//TODO: Remove tmp file
-				res.json({
-					status : 200,
-					file : files
 				});
 			});//On upload complete
 		}//Add to database

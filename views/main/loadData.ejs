@@ -52,9 +52,8 @@
 				alert("success");
 				// show response from the php script.
 			},
-			fail : function() {
-				alert("asdfadsfadf");
-			}
+			error : function(jqXHR,textStatus,errorMessage) {
+				alert(jqXHR.responseJSON.message);			}
 		});
 		return false;
 		// avoid to execute the actual submit of the form.

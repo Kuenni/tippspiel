@@ -40,10 +40,12 @@ betsApp.controller('BetsController', function($scope, $http, $log) {
 						matchday : $scope.matchdaySelector.value
 					}
 				}).success(function(data){
+					//Little unfortunate naming of variables when builidng the bet from the match
 					var matchesLeft = data.matches.length;
 					data.matches.forEach(function(match){
 						match.goalshome = -1;
 						match.goalsguest = -1;
+						match.match = match.id
 						delete match.id;
 						matchesLeft -= 1;
 						if(matchesLeft == 0){

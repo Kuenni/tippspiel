@@ -22,11 +22,13 @@ module.exports = {
 					res.send(500, {
 						error : "DB Error"
 					});
+					return;
 				} else if (usr.length) {
 					console.log("Username taken");
 					res.send(400, {
 						error : "Username already Taken"
 					});
+					return;
 				} else {
 					var hasher = require("password-hash");
 					password = hasher.generate(password);
@@ -38,9 +40,10 @@ module.exports = {
 							res.send(500, {
 								error : "DB Error"
 							});
+							return;
 						} else {
 							req.session.user = user;
-							return res.redirect("bet/bets");
+							return res.redirect("/bets");
 						}
 					});
 				}

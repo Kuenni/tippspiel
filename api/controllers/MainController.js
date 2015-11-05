@@ -69,6 +69,8 @@ module.exports = {
 						var hasher = require("password-hash");
 						if (hasher.verify(password, user.password)) {
 							req.session.user = user;
+							//FIXME: Need some kind of reload middleware for these updates
+							user.updateNumberCorrectBets();
 							req.session.authenticated = true;
 							return res.redirect("/bets");
 						} else {

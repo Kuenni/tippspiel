@@ -32,6 +32,17 @@ module.exports = {
 					callback(null,correctCounter);
 				});
 			},
+			updateNumberCorrectBets : function(){
+				var correctCounter = 0;
+				this.bets.forEach(function(bet){
+					if(bet.getBetResultCode() == 3){
+						correctCounter += 1;
+					}
+				});
+				this.nCorrect = correctCounter;
+				this.save();
+				var correctCounter = 0;
+			},
 			getNumberDifferenceBets : function(callback){
 				var differenceCounter = 0;
 				Bet.find({user:this.username}).populateAll().exec(function(err,bets){

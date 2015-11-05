@@ -120,7 +120,6 @@ module.exports = {
 				return;
 			}
 			User.findByUsername(req.session.user.username).populateAll().exec(function(err,users){
-				console.log('/bets User: ' + users[0].username + ' nCorrect: ' + users[0].nCorrect);
 				res.view({test: users[0].nCorrect});
 			});
 		}

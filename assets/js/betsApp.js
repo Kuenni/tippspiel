@@ -12,7 +12,7 @@ betsApp.controller('BetsController', function($scope, $http, $log) {
 	};
 	//Get the username for the logged-in user
 	$http({method: 'GET',
-		url : '/user'}).success(function(data){
+		url : '/username'}).success(function(data){
 			$scope.user = data.username;
 		})
 	$(document).ready(function() {

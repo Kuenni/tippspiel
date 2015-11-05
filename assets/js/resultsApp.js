@@ -16,16 +16,12 @@ resultsApp.controller('ResultsController', function($scope, $http, $log) {
 	});
 	$scope.matchdays = matchdays;
 	$scope.printSelectedMatchday = function() {
-		$scope.matches = [];
 		$http({
-			method : "POST",
-			url : "/listMatchday",
-			data : {
-				matchday : $scope.matchdaySelector.value
-			}
+			method : "GET",
+			url : "/result",
+			params : {matchday : $scope.matchdaySelector.value}
 		}).success(function(data) {
-			var result = data.matches;
-			$scope.matches = result;
+			$scope.matches = data;
 		});
 	};
 	$scope.updateResults = function() {

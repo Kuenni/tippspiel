@@ -22,44 +22,45 @@ betsApp.controller('BetsController', function($scope, $http, $log) {
 	$scope.matchdays = matchdays;
 	$scope.printSelectedMatchday = function() {
 		$scope.matches = [];
-		$http({
-			method : "POST",
-			url : "/listBets",
-			data : {
-				matchday : $scope.matchdaySelector.value,
-				username : $scope.username
-			}
-		}).success(function(data) {
-			var result = data.bets;
-			if(result.length == 0){
-				console.log('Zero length bet');
-				$http({
-					method : "POST",
-					url : "/listMatchday",
-					data : {
+		$http.get('/bet',
+				{params : {	"matchday" : $scope.matchdaySelector.value,
+							"user" : $scope.user}
+		}).success(function(bets) {
+			if(bets.length == 0){
+				$http.get("/result",{
+					params : {
 						matchday : $scope.matchdaySelector.value
 					}
 				}).success(function(data){
-					//Little unfortunate naming of variables when builidng the bet from the match
-					var matchesLeft = data.matches.length;
-					data.matches.forEach(function(match){
+					//Little unfortunate naming of variables when building the bet from the match
+					var matchesLeft = data.length;
+					data.forEach(function(match){
+						$http.post('/bet',{
+							match : match.id,
+							user : $scope.user,
+							matchday:match.matchday,
+							teamhome : match.teamhome,
+							teamguest : match.teamguest});
 						match.goalshome = -1;
 						match.goalsguest = -1;
-						match.match = match.id
+						match.match = match.id;
+						match.user = $scope.user;
 						delete match.id;
 						matchesLeft -= 1;
 						if(matchesLeft == 0){
-							$scope.matches = data.matches;
+							$scope.matches = data;
 						}
 					});
 				});
 			}else{
-				$scope.matches = result;
+				console.log(bets);
+				$scope.matches = bets;
 			}
 		});
 	};
 	$scope.updateBets = function() {
 		var matches = $scope.matches;
+		console.log(matches);
 		$http({
 			method : "POST",
 			url : "/bets/update",

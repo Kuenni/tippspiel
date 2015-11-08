@@ -84,10 +84,15 @@ module.exports = {
 			var matchesLeft = allBets.length;
 			var matchday = req.param("matchday");
 			var username = req.session.user.username;
+			Bet.find().populateAll();
 			allBets.forEach(function(bet){
+				matchId = bet.match.id;
+				if (matchId == undefined){
+					matchId = bet.match;
+				}
 				Bet.update({user : username,
-					matchday:matchday,match:bet.match.id},
-					{goalshome:bet.goalshome,goalsguest : bet.goalsguest}).exec(function(err,localBet){
+					matchday:matchday,match:matchId},
+					{goalshome:bet.goalshome, goalsguest:bet.goalsguest, userMod:req.session.user.id}).exec(function(err,localBet){
 						if(err){
 							console.log("Error on bets update");
 							res.send(500);
@@ -95,20 +100,21 @@ module.exports = {
 						}
 						matchesLeft -= 1;
 						if(matchesLeft == 0){
-							User.findOne({username : username}).populateAll().exec(function(err,user){
-								user.getNumberCorrectBets(function(err,correct){
-									user.nCorrect = correct;
-									user.save();
-								});
-								user.getNumberDifferenceBets(function(err,difference){
-									user.nDiff = difference;
-									user.save();
-								});
-								user.getNumberTendencyBets(function(err,tendency){
-									user.nTrend = tendency;
-									user.save();
-								});
-							});
+							//TODO: Put this stuff in local update functions in the User model
+//							User.findOne({username : username}).populateAll().exec(function(err,user){
+//								user.getNumberCorrectBets(function(err,correct){
+//									user.nCorrect = correct;
+//									user.save();
+//								});
+//								user.getNumberDifferenceBets(function(err,difference){
+//									user.nDiff = difference;
+//									user.save();
+//								});
+//								user.getNumberTendencyBets(function(err,tendency){
+//									user.nTrend = tendency;
+//									user.save();
+//								});
+//							});
 							res.send(200);
 						}
 					});

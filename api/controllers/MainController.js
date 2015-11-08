@@ -156,12 +156,17 @@ module.exports = {
 		},
 		updateResults: function(req,res){
 			var matches = req.param("matches");
+			var matchesLeft = matches.length;
 			matches.forEach(function(match){
 				Result.update({id:match.id},
 						{goalshome:match.goalshome,goalsguest:match.goalsguest}).exec(function(err,updated){
+							matchesLeft -= 1;
 							if(err){
 								console.log('Error on update');
 								console.log(err);
+							}
+							if(matchesLeft == 0){
+								Rankig.updateUserRanking();
 							}
 						});
 			});

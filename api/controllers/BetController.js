@@ -100,6 +100,7 @@ module.exports = {
 						}
 						matchesLeft -= 1;
 						if(matchesLeft == 0){
+							Ranking.updateUserRanking();
 							//TODO: Put this stuff in local update functions in the User model
 //							User.findOne({username : username}).populateAll().exec(function(err,user){
 //								user.getNumberCorrectBets(function(err,correct){

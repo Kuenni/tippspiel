@@ -166,7 +166,7 @@ module.exports = {
 								console.log(err);
 							}
 							if(matchesLeft == 0){
-								Rankig.updateUserRanking();
+								Ranking.updateUserRanking();
 							}
 						});
 			});

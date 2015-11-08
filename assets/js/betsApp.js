@@ -72,7 +72,7 @@ betsApp.controller('BetsController', function($scope, $http, $log) {
 		}).success(function(data) {
 			$("#successAlert").alert();
 			$("#successAlert").fadeTo(2000, 500).slideUp(500, function() {
-				$("#successAlert").alert('close');
+				$("#successAlert").hide();
 			});
 		});/*.fail(function(data) {
 			$("#failAlert").alert();

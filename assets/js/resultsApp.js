@@ -21,11 +21,22 @@ resultsApp.controller('ResultsController', function($scope, $http, $log) {
 			url : "/result",
 			params : {matchday : $scope.matchdaySelector.value}
 		}).success(function(data) {
+			data.forEach(function(match){
+				if(match.goalsguest == undefined){
+					match.goalsguest = -1;
+				}
+				if(match.goalshome == undefined){
+					match.goalshome = -1;
+				}
+			});
 			$scope.matches = data;
 		});
 	};
 	$scope.updateResults = function() {
 		var matches = $scope.matches;
+		if(matches == undefined){
+			matches = [];
+		}
 		$http({
 			method : "POST",
 			url : "/results/update",
@@ -35,7 +46,7 @@ resultsApp.controller('ResultsController', function($scope, $http, $log) {
 		}).success(function(data) {
 			$("#successAlert").alert();
 			$("#successAlert").fadeTo(2000, 500).slideUp(500, function() {
-				$("#successAlert").alert('close');
+				$("#successAlert").hide();
 			});
 		});/*.fail(function(data) {
 			$("#failAlert").alert();

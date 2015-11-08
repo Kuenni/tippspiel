@@ -22,6 +22,9 @@ betsApp.controller('BetsController', function($scope, $http, $log) {
 	$scope.matchdays = matchdays;
 	$scope.printSelectedMatchday = function() {
 		$scope.matches = [];
+		if($scope.matchdaySelector == undefined){
+			return;
+		}
 		$http.get('/bet',
 				{params : {	"matchday" : $scope.matchdaySelector.value,
 							"user" : $scope.user}
@@ -60,7 +63,9 @@ betsApp.controller('BetsController', function($scope, $http, $log) {
 	};
 	$scope.updateBets = function() {
 		var matches = $scope.matches;
-		console.log(matches);
+		if($scope.matchdaySelector == undefined){
+			return;
+		}
 		$http({
 			method : "POST",
 			url : "/bets/update",

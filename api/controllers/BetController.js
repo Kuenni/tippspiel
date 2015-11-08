@@ -101,21 +101,6 @@ module.exports = {
 						matchesLeft -= 1;
 						if(matchesLeft == 0){
 							Ranking.updateUserRanking();
-							//TODO: Put this stuff in local update functions in the User model
-//							User.findOne({username : username}).populateAll().exec(function(err,user){
-//								user.getNumberCorrectBets(function(err,correct){
-//									user.nCorrect = correct;
-//									user.save();
-//								});
-//								user.getNumberDifferenceBets(function(err,difference){
-//									user.nDiff = difference;
-//									user.save();
-//								});
-//								user.getNumberTendencyBets(function(err,tendency){
-//									user.nTrend = tendency;
-//									user.save();
-//								});
-//							});
 							res.send(200);
 						}
 					});

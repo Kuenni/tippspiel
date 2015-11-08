@@ -17,21 +17,6 @@ module.exports = {
 				collection: 'bet',
 				via : 'userMod'
 			},
-			getNumberCorrectBets : function(callback){
-				var correctCounter = 0;
-				Bet.find({user:this.username}).populateAll().exec(function(err,bets){
-					if(err){
-						console.log("Get correct bets error");
-						console.log(err);
-					}
-					bets.forEach(function(bet){
-						if(bet.getBetResultCode() == 3){
-							correctCounter += 1;
-						}
-					});
-					callback(null,correctCounter);
-				});
-			},
 			updateNumberCorrectBets : function(){
 				var correctCounter = 0;
 				this.bets.forEach(function(bet){
@@ -43,35 +28,27 @@ module.exports = {
 				this.save();
 				var correctCounter = 0;
 			},
-			getNumberDifferenceBets : function(callback){
+			updateNumberDifferenceBets : function(){
 				var differenceCounter = 0;
-				Bet.find({user:this.username}).populateAll().exec(function(err,bets){
-					if(err){
-						console.log("Get difference bets error");
-						console.log(err);
+				
+				this.bets.forEach(function(bet){
+					if(bet.getBetResultCode() == 2){
+						differenceCounter += 1;
 					}
-					bets.forEach(function(bet){
-						if(bet.getBetResultCode() == 2){
-							differenceCounter += 1;
-						}
-					});
-					callback(null,differenceCounter);
 				});
+				this.nDiff = differenceCounter;
+				this.save();
 			},
-			getNumberTendencyBets : function(callback){
-				var tendencyCounter = 0;
-				Bet.find({user:this.username}).populateAll().exec(function(err,bets){
-					if(err){
-						console.log("Get difference bets error");
-						console.log(err);
+			updateNumberTendencyBets : function(callback){
+				var tendencyCounter = 0;				
+				this.bets.forEach(function(bet){
+					if(bet.getBetResultCode() == 1){
+						tendencyCounter += 1;
 					}
-					bets.forEach(function(bet){
-						if(bet.getBetResultCode() == 1){
-							tendencyCounter += 1;
-						}
-					});
-					callback(null,tendencyCounter);
 				});
+				this.nTrend = tendencyCounter;
+				this.save();
+
 			}
 		}
 };

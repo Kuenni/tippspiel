@@ -54,7 +54,6 @@ module.exports = {
 								if(err){
 									console.log("Error on creating new Bet")
 								}
-								Bet.find().populateAll();
 								resultsLeft -= 1;
 								if(resultsLeft == 0){
 									Bet.findByMatchday(matchday).exec(function(err,results){
@@ -84,7 +83,6 @@ module.exports = {
 			var matchesLeft = allBets.length;
 			var matchday = req.param("matchday");
 			var username = req.session.user.username;
-			Bet.find().populateAll();
 			allBets.forEach(function(bet){
 				matchId = bet.match.id;
 				if (matchId == undefined){
@@ -100,7 +98,9 @@ module.exports = {
 						}
 						matchesLeft -= 1;
 						if(matchesLeft == 0){
-							Ranking.updateUserRanking();
+							Bet.find().populateAll().exec(function(err,bets){
+								Ranking.updateUserRanking();
+							});
 							res.send(200);
 						}
 					});

@@ -75,6 +75,8 @@ betsApp.controller('BetsController', function($scope, $http, $log) {
 				matchday	: $scope.matchdaySelector.value
 			}
 		}).success(function(data) {
+			console.log(data);
+			$scope.matches = data;
 			$("#successAlert").alert();
 			$("#successAlert").fadeTo(2000, 500).slideUp(500, function() {
 				$("#successAlert").hide();

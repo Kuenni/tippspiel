@@ -37,6 +37,7 @@
 						<th align="center">Tore Heim</th>
 						<th></th>
 						<th align="center">Tore Gast</th>
+						<th align="center">ResultCode</th>
 					</thead>
 					<tr ng-repeat="match in matches">
 						<td>{{match.teamhome}}</td>
@@ -48,6 +49,7 @@
 						<td>
 						<input type="text" class="text-center" ng-model="match.goalsguest"/>
 						</td>
+						<td align="center">{{match.betresultcode}}</td>
 					</tr>
 				</table>
 			</div>

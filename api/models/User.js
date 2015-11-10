@@ -40,7 +40,6 @@ module.exports = {
 					var differenceCounter = 0;
 					bets.forEach(function(bet){
 						var resultCode = bet.getBetResultCode();
-						console.log(resultCode);
 						if(resultCode == 2){
 							differenceCounter += 1;
 						}
@@ -50,16 +49,17 @@ module.exports = {
 				});
 			},
 			updateNumberTendencyBets : function(callback){
+				var requestedUser = this;
+				var requestUsername = this.username;
 				Bet.find({user:this.username}).populateAll().exec(function(err,bets){
-
 				var tendencyCounter = 0;				
 				bets.forEach(function(bet){
 					if(bet.getBetResultCode() == 1){
 						tendencyCounter += 1;
 					}
 				});
-	//			this.user.nTrend = tendencyCounter;
-	//			this.user.save();
+				requestedUser.nTrend = tendencyCounter;
+				requestedUser.save();
 				});
 
 			}

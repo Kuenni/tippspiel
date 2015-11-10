@@ -15,6 +15,7 @@ module.exports = {
 			goalshome: 'INT',
 			goalsguest: 'INT',
 			season: 'STRING',
+			betresultcode: 'INT',
 			userMod: {
 				model: 'user'
 			},
@@ -22,7 +23,8 @@ module.exports = {
 				model: 'result'
 			},
 			getBetResultCode : function(){
-				if (this.match.goalsguest == -1 || this.match.goalshome == -1 || this.goalsguest == -1 || this.goalshome == -1 ){
+				if (this.match.goalsguest == -1 || this.match.goalshome == -1 ||
+						this.goalsguest == -1 || this.goalshome == -1 ){
 					return -1;
 				}
 				var deltaGoalsResult = this.match.goalshome - this.match.goalsguest;

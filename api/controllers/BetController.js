@@ -83,6 +83,7 @@ module.exports = {
 			var matchesLeft = allBets.length;
 			var matchday = req.param("matchday");
 			var username = req.session.user.username;
+			var updatedBetList = [];
 			allBets.forEach(function(bet){
 				matchId = bet.match.id;
 				if (matchId == undefined){
@@ -90,20 +91,31 @@ module.exports = {
 				}
 				Bet.update({user : username,
 					matchday:matchday,match:matchId},
-					{goalshome:bet.goalshome, goalsguest:bet.goalsguest, userMod:req.session.user.id}).exec(function(err,localBet){
-						if(err){
-							console.log("Error on bets update");
-							res.send(500);
-							return;
-						}
-						matchesLeft -= 1;
-						if(matchesLeft == 0){
-							Bet.find().populateAll().exec(function(err,bets){
-								Ranking.updateUserRanking();
+					{goalshome:bet.goalshome, goalsguest:bet.goalsguest,
+						userMod:req.session.user.id}).exec(function(err,updatedBets){
+							if(err){
+								console.log("Error on bets update");
+								res.send(500);
+								return;
+							}
+							//Take only the first returned value.
+							//The updated should anyways only work on a unique record
+							localBet = updatedBets[0];
+							Bet.findOneById(localBet.id).populateAll().exec(function(err,bet){
+								bet.betresultcode = bet.getBetResultCode();
+								bet.save(function(err,savedBet){
+									if(err)
+										console.log(err);
+									updatedBetList.push(savedBet);
+									matchesLeft -= 1;
+									if(matchesLeft == 0){
+										Ranking.updateUserRanking();
+										res.send(200,updatedBetList);
+									}
+								});
+
 							});
-							res.send(200);
-						}
-					});
+						});
 			});
 		},
 		bets : function(req,res){

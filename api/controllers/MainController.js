@@ -90,6 +90,8 @@ module.exports = {
 		getUser : function(req,res){
 			if (req.session.user){
 				res.json({username:user.username});
+			} else {
+				res.json({username:undefined});
 			}
 		},
 		createUserRanking:function(req,res){

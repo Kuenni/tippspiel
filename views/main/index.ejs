@@ -1,7 +1,7 @@
 <body ng-app="mainPageApp">
 	<div class="container-fluid">
-		<h1>Tippspiel Login</h1>
-		<div>
+		<div ng-if="!loggedIn">
+			<h1>Tippspiel Login</h1>
 			<h3><span class="label label-default"> Login </span></h3>
 			<form class="form-inline" id="login-form">
 				<div class="form-group">

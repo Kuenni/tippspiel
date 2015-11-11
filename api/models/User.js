@@ -17,6 +17,31 @@ module.exports = {
 				collection: 'bet',
 				via : 'userMod'
 			},
+			updateBetStatistics : function(callback){
+				var requestedUser = this;
+				var nCorrect = 0;
+				var nDiff = 0;
+				var nTrend = 0;
+				this.bets.forEach(function(bet){
+					//unary + means cast to int
+					switch(+bet.betresultcode){
+					case 3:
+						nCorrect += 1;
+						break;
+					case 2:
+						nDiff += 1;
+						break;
+					case 1:
+						nTrend += 1;
+						break;
+					default:
+						break;
+					}
+				});
+				callback({nCorrect : nCorrect,
+					nDiff : nDiff,
+					nTrend : nTrend});
+			},
 			updateNumberCorrectBets : function(){
 				var requestedUser = this;
 				var requestUsername = this.username;

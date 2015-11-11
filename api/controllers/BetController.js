@@ -109,8 +109,15 @@ module.exports = {
 									updatedBetList.push(savedBet);
 									matchesLeft -= 1;
 									if(matchesLeft == 0){
-										Ranking.updateUserRanking();
-										res.send(200,updatedBetList);
+										User.findOneByUsername(bet.user).populate('bets').exec(function(err,user){
+											user.updateBetStatistics(function(results){
+												user.nCorrect = results.nCorrect;
+												user.nDiff = results.nDiff;
+												user.nTrend = results.nTrend;
+												user.save();
+												res.send(200,updatedBetList);
+											});
+										});										
 									}
 								});
 

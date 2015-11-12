@@ -52,7 +52,9 @@
 							<a href="/bets">Bets</a>
 						</li>
 						<li class=<%= Helper.isCurrentPage(req, 'main', 'login') ? 'active' : ''%>>
-							<a href="/login">Login</a>
+							<a href=
+							<%= Helper.isUserLoggedIn(req) ? '/logout' : '/login'%>>
+							<%= Helper.isUserLoggedIn(req) ? "Logout" : "Login"%></a>
 						</li>
 						<li class=<%= Helper.isCurrentPage(req, 'main', 'signup') ? 'active' : ''%>>
 							<a href="/signup">Signup</a>

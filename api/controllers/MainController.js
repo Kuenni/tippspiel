@@ -49,6 +49,11 @@ module.exports = {
 				}
 			});
 		},
+		logout: function(req,res){
+			req.session.user = undefined;
+			req.session.authenticated = false;
+			res.redirect('/');
+		},
 		login : function(req, res) {
 			if (req.method === 'GET'){
 				res.view();

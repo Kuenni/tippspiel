@@ -56,9 +56,11 @@
 							<%= Helper.isUserLoggedIn(req) ? '/logout' : '/login'%>>
 							<%= Helper.isUserLoggedIn(req) ? "Logout" : "Login"%></a>
 						</li>
+						<%if( !Helper.isUserLoggedIn(req)){%>
 						<li class=<%= Helper.isCurrentPage(req, 'main', 'signup') ? 'active' : ''%>>
 							<a href="/signup">Signup</a>
 						</li>
+						<%}%>
 						<li class=<%= Helper.isCurrentPage(req, 'main', 'loadData') ? 'active' : ''%>>
 							<a href="/loadData">Load Data</a>
 						</li>

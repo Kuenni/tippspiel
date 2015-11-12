@@ -1,22 +1,23 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<div class="container">
+	<h1>Load Data into DB</h1>
 
-<h1>Load Data into DB</h1>
+	<div id="select-season">
+		<select>
+			<option value="2015/2016">2015/2016</option>
+			<option value="2016/2017">2016/2017</option>
+			<option value="2017/2018">2017/2018</option>
+			<option value="2018/2019">2018/2019</option>
+		</select>
+		<form id='file-selector'>
+			<input type='file' id='userFile'>
+			<br>
+			<input type='submit' id='upload_btn' value='upload'>
+		</form>
+	</div>
+	<div id="output">
 
-<div id="select-season">
-	<select>
-		<option value="2015/2016">2015/2016</option>
-		<option value="2016/2017">2016/2017</option>
-		<option value="2017/2018">2017/2018</option>
-		<option value="2018/2019">2018/2019</option>
-	</select>
-	<form id='file-selector'>
-		<input type='file' id='userFile'>
-		<br>
-		<input type='submit' id='upload_btn' value='upload'>
-	</form>
-</div>
-<div id="output">
-
+	</div>
 </div>
 <script>
 	$("#upload_btn").click(function(e) {// changed
@@ -52,8 +53,9 @@
 				alert("success");
 				// show response from the php script.
 			},
-			error : function(jqXHR,textStatus,errorMessage) {
-				alert(jqXHR.responseJSON.message);			}
+			error : function(jqXHR, textStatus, errorMessage) {
+				alert(jqXHR.responseJSON.message);
+			}
 		});
 		return false;
 		// avoid to execute the actual submit of the form.

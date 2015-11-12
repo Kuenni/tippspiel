@@ -7,14 +7,15 @@ resultsApp.controller('ResultsController', function($scope, $http, $log) {
 	var matchdays = [];
 	for (var i = 1; i < 35; i++) {
 		matchdays.push({
+			"name" : i + '. Spieltag',
 			"value" : i
 		});
 	};
+	$scope.matchdays = matchdays;
 	$(document).ready(function() {
 		$("#successAlert").hide();
 		$("#failAlert").hide();
 	});
-	$scope.matchdays = matchdays;
 	$scope.printSelectedMatchday = function() {
 		$http({
 			method : "GET",
@@ -55,4 +56,10 @@ resultsApp.controller('ResultsController', function($scope, $http, $log) {
 			});
 		});*/
 	};
+	//Get current matchday
+	$http({method: 'GET',
+		url : 'http://www.openligadb.de/api/getcurrentgroup/bl1'}).success(function(data){
+			$scope.matchdaySelector = $scope.matchdays[parseInt(data.GroupName.split('.')[0])];
+			$scope.printSelectedMatchday();
+		})
 });

@@ -7,7 +7,7 @@
 		<div id="matchesDiv">
 			<div id="choseDayDiv">
 				Spieltag w&auml;hlen:
-				<select	ng-model="matchdaySelector" ng-options="(day.value + '. Spieltag') for day in matchdays"
+				<select	ng-model="matchdaySelector" ng-options="day.name for day in matchdays"
 				ng-change="printSelectedMatchday()" id="matchday-selector"></select>
 			</div>
 			<div id="successAlert" class="alert alert-success alert-dismissable">

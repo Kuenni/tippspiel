@@ -7,9 +7,11 @@ betsApp.controller('BetsController', function($scope, $http, $log) {
 	var matchdays = [];
 	for (var i = 1; i < 35; i++) {
 		matchdays.push({
+			"name" : i + '. Spieltag',
 			"value" : i
 		});
 	};
+	$scope.matchdays = matchdays;
 	
 	$scope.pointsCorrect = 5;
 	$scope.pointsDifference = 3;
@@ -35,12 +37,11 @@ betsApp.controller('BetsController', function($scope, $http, $log) {
 	$http({method: 'GET',
 		url : '/username'}).success(function(data){
 			$scope.user = data.username;
-		})
+		});
 	$(document).ready(function() {
 		$("#successAlert").hide();
 		$("#failAlert").hide();
 	});
-	$scope.matchdays = matchdays;
 	$scope.printSelectedMatchday = function() {
 		$scope.matches = [];
 		if($scope.matchdaySelector == undefined){
@@ -109,4 +110,10 @@ betsApp.controller('BetsController', function($scope, $http, $log) {
 			});
 		});*/
 	};
+	//Get current matchday
+	$http({method: 'GET',
+		url : 'http://www.openligadb.de/api/getcurrentgroup/bl1'}).success(function(data){
+			$scope.matchdaySelector = $scope.matchdays[parseInt(data.GroupName.split('.')[0])];
+			$scope.printSelectedMatchday();
+		})
 });

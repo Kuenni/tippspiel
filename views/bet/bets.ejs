@@ -1,19 +1,14 @@
 <html ng-app = "betsApp">
-	<head>
-	</head>
+	<head></head>
 </html>
 <body ng-Controller = "BetsController">
 	<div class="container">
-	<h1>Willkomen, <%= req.session.user.username %></h1>
-	<h2>Correct: <%=test%></h2>
+		<h1>Willkomen, <%= req.session.user.username %>!</h1>
 		<div id="matchesDiv">
 			<div id="choseDayDiv">
 				Spieltag w&auml;hlen:
 				<select	ng-model="matchdaySelector" ng-options="(day.value + '. Spieltag') for day in matchdays"
 				ng-change="printSelectedMatchday()" id="matchday-selector"></select>
-				<button class="btn btn-primary" ng-click="updateBets()">
-					Abschicken
-				</button>
 			</div>
 			<div id="successAlert" class="alert alert-success alert-dismissable">
 				<button type="button" class="close" data-dismiss="alert"
@@ -34,10 +29,10 @@
 					<thead>
 						<th>Heim</th>
 						<th>Gast</th>
-						<th align="center">Tore Heim</th>
+						<th class="text-center">Tore Heim</th>
 						<th></th>
-						<th align="center">Tore Gast</th>
-						<th align="center">ResultCode</th>
+						<th class="text-center">Tore Gast</th>
+						<th class="text-center">Punkte</th>
 					</thead>
 					<tr ng-repeat="match in matches">
 						<td>{{match.teamhome}}</td>
@@ -45,14 +40,17 @@
 						<td>
 						<input type="text" class="text-center" ng-model="match.goalshome"/>
 						</td>
-						<td align="center">:</td>
+						<td class="text-center">:</td>
 						<td>
 						<input type="text" class="text-center" ng-model="match.goalsguest"/>
 						</td>
-						<td align="center">{{match.betresultcode}}</td>
+						<td class="text-center">{{getPointsForBet(match.betresultcode)}}</td>
 					</tr>
 				</table>
 			</div>
+			<button class="btn btn-primary text-center" ng-click="updateBets()">
+				Abschicken
+			</button>
 		</div>
 	</div>
 </body>

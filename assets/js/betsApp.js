@@ -10,6 +10,27 @@ betsApp.controller('BetsController', function($scope, $http, $log) {
 			"value" : i
 		});
 	};
+	
+	$scope.pointsCorrect = 5;
+	$scope.pointsDifference = 3;
+	$scope.pointsTrend = 1;
+	
+	$scope.getPointsForBet = function(resultcode){
+		switch(+resultcode){
+		case 3:
+			return 5;
+			break;
+		case 2:
+			return 3;
+			break;
+		case 1:
+			return 1;
+			break;
+		default:
+			return 0;
+		break;
+		}
+	}
 	//Get the username for the logged-in user
 	$http({method: 'GET',
 		url : '/username'}).success(function(data){

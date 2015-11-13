@@ -25,11 +25,11 @@
 					<th class="text-center">Tendency</th>
 					<th class="text-center">Total Points</th>
 				</thead>
-				<tr ng-repeat="item in userRankings | orderBy:'-correct'">
-					<td>{{item.user}}</td>
-					<td class="text-center">{{item.correct}}</td>
-					<td class="text-center">{{item.difference}}</td>
-					<td class="text-center">{{item.tendency}}</td>
+				<tr ng-repeat="item in users | orderBy:'-correct'">
+					<td>{{item.username}}</td>
+					<td class="text-center">{{item.nCorrect}}</td>
+					<td class="text-center">{{item.nDiff}}</td>
+					<td class="text-center">{{item.nTrend}}</td>
 					<td class="text-center">{{getSum(item)}}</td>
 				</tr>
 			</table>

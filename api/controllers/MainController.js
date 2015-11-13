@@ -101,23 +101,6 @@ module.exports = {
 				res.json({username:undefined});
 			}
 		},
-		createUserRanking:function(req,res){
-			User.find().exec(function(err,users){
-				var rankings = [];
-				if(err){
-					// TODO
-				}
-				users.forEach(function(user){
-					rankings.push({
-						user:user.username,
-						correct: user.nCorrect,
-						difference : user.nDiff,
-						tendency: user.nTrend
-					});				
-				});
-				res.send({userRankings:rankings});
-			});
-		},
 		results : function(req, res) {
 			var matchday = req.param("matchday");
 			if(typeof matchday == "undefined"){

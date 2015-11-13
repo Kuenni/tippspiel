@@ -11,9 +11,9 @@ mainPageApp.controller('MainPageController', function($scope, $http, $log) {
 	$scope.pointsTrend = 1;
 	
 	$scope.getSum = function(item){
-		return parseInt(item.tendency)*$scope.pointsTrend + 
-		parseInt(item.difference)*$scope.pointsDifference +
-		parseInt(item.correct)*$scope.pointsCorrect;
+		return parseInt(item.nTrend)*$scope.pointsTrend + 
+		parseInt(item.nDiff)*$scope.pointsDifference +
+		parseInt(item.nCorrect)*$scope.pointsCorrect;
 	}
 
 	$scope.login = function(){
@@ -49,10 +49,10 @@ mainPageApp.controller('MainPageController', function($scope, $http, $log) {
 	var getRanking = function() {
 		$http({
 			method : "GET",
-			url : "/createUserRanking",
+			url : "/user",
 		}).success(function(data) {
 			var result = data.userRankings;
-			$scope.userRankings = result;
+			$scope.users = data;
 		}).error(function(data) {
 			alert("Fails");
 		});

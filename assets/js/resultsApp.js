@@ -49,12 +49,7 @@ resultsApp.controller('ResultsController', function($scope, $http, $log) {
 			$("#successAlert").fadeTo(2000, 500).slideUp(500, function() {
 				$("#successAlert").hide();
 			});
-		});/*.fail(function(data) {
-			$("#failAlert").alert();
-			$("#failAlert").fadeTo(2000, 500).slideUp(500, function() {
-				$("#failAlert").alert('close');
-			});
-		});*/
+		});
 	};
 	//Get current matchday
 	$http({method: 'GET',

@@ -45,5 +45,9 @@ module.exports.routes = {
 		'/bets/update' : {
 			controller : 'bet',
 			action : 'updateBets'
+		},
+		'/timeline' : {
+			controller : 'bet',
+			action : 'pointsWithTime'
 		}
 };

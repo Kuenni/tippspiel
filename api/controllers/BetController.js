@@ -60,5 +60,32 @@ module.exports = {
 				return;
 			}
 			res.view();
+		},
+		pointsWithTime : function(req,res){
+			User.find().populate('bets').exec(function(err, users){
+				if(err){
+					console.log('Error getting users for points timeline');
+				}
+				var usersLeft = users.length;
+				var timelines = []
+				users.forEach(function(user){
+					usersLeft -= 1;
+					var userTimeline = {user:user.username,timeline:[]};
+					//Unary "+" means cast value to int
+					user.bets.forEach(function(bet){
+						if(userTimeline.timeline.length != 0 &&
+								userTimeline.timeline[userTimeline.timeline.length - 1].matchday === +bet.matchday){
+							userTimeline.timeline[userTimeline.timeline.length - 1].points += +bet.betresultcode;
+						}
+						else{
+							userTimeline.timeline.push({matchday:+bet.matchday,points: +bet.betresultcode});
+						}
+					});
+					timelines.push(userTimeline);
+					if(usersLeft == 0){
+						res.send(200,timelines);
+					}
+				});
+			});
 		}
 };

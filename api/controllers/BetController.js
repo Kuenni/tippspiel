@@ -130,8 +130,6 @@ module.exports = {
 				res.redirect('/login');
 				return;
 			}
-			User.findByUsername(req.session.user.username).populateAll().exec(function(err,users){
-				res.view();
-			});
+			res.view();
 		}
 };

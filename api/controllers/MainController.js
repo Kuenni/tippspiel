@@ -22,27 +22,29 @@ module.exports = {
 					res.send(500, {
 						error : "DB Error"
 					});
-					return;
 				} else if (usr.length) {
 					console.log("Username taken");
 					res.send(400, {
 						error : "Username already Taken"
 					});
-					return;
 				} else {
 					var hasher = require("password-hash");
 					password = hasher.generate(password);
 					User.create({
 						username : username,
-						password : password
+						password : password,
+						nCorrect : 0,
+						nDiff : 0,
+						nTrend : 0
 					}).exec(function(error, user) {
 						if (error) {
+							console.log("Error on create user");
 							res.send(500, {
 								error : "DB Error"
 							});
-							return;
 						} else {
 							req.session.user = user;
+							req.session.authenticated = true;
 							return res.redirect("/bets");
 						}
 					});
@@ -93,7 +95,7 @@ module.exports = {
 			});
 		},
 		getUser : function(req,res){
-			if (req.session.user){
+			if (req.session.user != undefined){
 				res.json({username:user.username});
 			} else {
 				res.json({username:undefined});

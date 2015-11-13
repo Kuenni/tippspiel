@@ -38,10 +38,6 @@ module.exports.routes = {
 			controller: 'main',
 			action: 'updateResults'
 		},
-		'/listBets':{
-			controller : 'bet',
-			action: 'listBets'
-		},
 		'/bets' : {
 			controller : 'bet',
 			action : 'bets'

@@ -23,27 +23,32 @@
 		</div>
 	</div>
 	<script>
-			$("#signupButton").click(function() {
-			var username = $("#signupName"
-				).val();
-				var password = $("#signupPassword").val();
-				var confirmPassword = $("#signupConfirmPassword").val();
-				if (username && password) {
-					if (password === confirmPassword) {
-						$.post('/signup', {
-							username : username,
-							password : password
-						}, function() {
-							window.location = "/bets";
-						}).fail(function(res) {
-							alert("Error alert: " + res.getResponseHeader("error"));
-						});
-					} else {
-						alert("Passwords don't match");
-					}
-				} else {
-					alert("A username and password is required");
-				}
+		$("#signupButton").click(function() {
+			var username = $("#signupName").val();
+			var password = $("#signupPassword").val();
+			var confirmPassword = $("#signupConfirmPassword").val();
+			if (username && password) {
+				if (password === confirmPassword) {
+					$.post('/signup', {
+					username : username,
+					password : password
+				}).done(function(){
+					window.location = "/bets";
+				}).fail(function(res, textStatus, err) {
+					console.log("res: " + res);
+					console.log("status: " + textStatus);
+					console.log("err: " + err);
+				//	var responseJSON = $.parseJSON(res.responseText);
+				//	alert("Error: " + responseJSON.error);
+				alert('asdfasdfasdf');
 				});
+				} else {
+					alert("Passwords don't match");
+				}
+			} else {
+				alert("A username and password is required");
+			}
+			return false;
+		});
 	</script>
-	</body>
+</body>

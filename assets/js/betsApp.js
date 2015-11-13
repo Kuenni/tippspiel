@@ -65,7 +65,9 @@ betsApp.controller('BetsController', function($scope, $http, $log) {
 							user : $scope.user,
 							matchday:match.matchday,
 							teamhome : match.teamhome,
-							teamguest : match.teamguest});
+							teamguest : match.teamguest,
+							goalshome : -1,
+							goalsguest: -1});
 						match.goalshome = -1;
 						match.goalsguest = -1;
 						match.match = match.id;

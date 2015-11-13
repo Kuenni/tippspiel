@@ -78,7 +78,6 @@ betsApp.controller('BetsController', function($scope, $http, $log) {
 					});
 				});
 			}else{
-				console.log(bets);
 				$scope.matches = bets;
 			}
 		});

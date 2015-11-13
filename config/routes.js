@@ -24,7 +24,7 @@ module.exports.routes = {
 			action : 'getUser'
 		},
 		'/results' : {
-			controller : 'main',
+			controller : 'result',
 			action : 'results'
 		},
 		'/loadData':{
@@ -49,10 +49,5 @@ module.exports.routes = {
 		'/bets/update' : {
 			controller : 'bet',
 			action : 'updateBets'
-		},
-		'/createUserRanking' : {
-			controller : 'main',
-			action : 'createUserRanking'
 		}
-
 };

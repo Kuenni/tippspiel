@@ -101,30 +101,6 @@ module.exports = {
 				res.json({username:undefined});
 			}
 		},
-		results : function(req, res) {
-			var matchday = req.param("matchday");
-			if(typeof matchday == "undefined"){
-				matchday = 1
-			}
-			Result.findByMatchday(matchday).exec(
-					function(err, results) {
-						if (err) {
-							console.log("DB Error");
-							res.send(500, {
-								error : "DB Error"
-							});
-							return;
-						}
-						if (results.length == 0) {
-							res.send(500, {
-								error : "DB Empty"
-							});
-							return;
-						}
-						res.view({matches : results})
-					});
-
-		},
 		listMatchday : function(req, res) {
 			Result.findByMatchday(req.param("matchday")).exec(
 					function(err, results) {

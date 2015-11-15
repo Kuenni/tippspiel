@@ -72,9 +72,6 @@ mainPageApp.controller('MainPageController', function($scope, $http, $log) {
 			}
 			zDomain.push(timelineObject.user);
 		});
-
-		console.log(data);
-
 		
 		var xExtents = [0,xMax];
 		var yExtents = [0,41];
@@ -121,63 +118,77 @@ mainPageApp.controller('MainPageController', function($scope, $http, $log) {
 		.attr("class", "label")
 		.attr("transform", "rotate(-90)")
 		.attr("y", 6)
-		.attr("dy", ".71em")
+		.attr("dy", ".5em")
 		.style("text-anchor", "end")
 		.text("Punkte");
 
+		svg.selectAll('.dotContainer').data(data).enter()
+		.append('g')
+		.attr('class',function(d){return d.user})
+		.selectAll(".dot")
+		.data(function(d){
+			pointDataList = [];
+			d.timeline.forEach(function(point){
+				pointDataList.push({"matchday" : point.matchday,"points" : point.points,"user" : d.user});
+			});
+			return pointDataList;
+		})
+		.enter().append("circle")
+		.attr("class", "dot")
+		.attr("r", 3.5)
+		.attr("cx", function(d) { return x(d.matchday); })
+		.attr("cy", function(d) { return y(d.points); })
+		.style("fill", function(d) { return z(d.user); });
 
-		data.forEach(function(timelineObject){
-			console.log(timelineObject);
-			svg.append('g').selectAll(".dot")
-			.data(timelineObject.timeline)
-			.enter().append("circle")
-			.attr("class", "dot")
-			.attr("r", 3.5)
-			.attr("cx", function(d) { return x(d.matchday); })
-			.attr("cy", function(d) { return y(d.points); })
-			.style("fill", function(d) { return z(timelineObject.user); });
+		legend = svg.append("g")
+		.attr("class","legend")
+		.attr("width", 100)
+		.attr("height", 50)
+		.attr("x",width-100)
+		.attr("y",height-50)
+		.style("font-size","12px");
+
+		legend.selectAll('g').data(zDomain)
+		.enter().append('g')
+		.attr("transform","translate(" + (width - 100) + ",0)")
+		.each(function(d,i){
+			var g = d3.select(this);
+			g.append("circle")
+			.attr("r",3.6)
+			.attr("cy",3.5 + i*15)
+			.attr("cx",3.5)
+			.attr("fill",z(d));
+			g.append("text")
+			.attr("x", 10.5)
+			.attr("y", 3.5 + i*15)
+			.attr("dy", ".35em")
+			.text(function(d) { return d; });
 		});
 
-//		legend = svg.append("g")
-//		.attr("class","legend")
-//		.attr("width", 100)
-//		.attr("height", 50)
-//		.attr("x",width-100)
-//		.attr("y",height-50)
-//		.style("font-size","12px");
-//
-//		legend.selectAll('g').data(zDomain)
-//		.enter().append('g')
-//		.attr("transform","translate(" + (width - 100) + ",0)")
-//		.each(function(d,i){
-//			var g = d3.select(this);
-//			g.append("circle")
-//			.attr("r",3.6)
-//			.attr("cy",3.5 + i*15)
-//			.attr("cx",3.5)
-//			.attr("fill",z(d));
-//			g.append("text")
-//			.attr("x", 10.5)
-//			.attr("y", 3.5 + i*15)
-//			.attr("dy", ".35em")
-//			.text(function(d) { return d; });
-//		});
-
 		var lineFunction = d3.svg.line()
-		.x(function(d) { return x(d.day); })
+		.x(function(d) { return x(d.matchday); })
 		.y(function(d) { return y(d.points); })
 		.interpolate("linear");
 
-
-//		for( timelineObject in data ){
-//			svg.append("g")
-//			.append("path")
-//			.attr("d",lineFunction(data[name]))
-//			.attr("stroke", z(name))
-//			.attr("stroke-width", 2)
-//			.attr("fill", "none");
-//		}
+		svg.selectAll('.lineContainer').data(data)
+		.enter()
+		.append('g')
+		.attr('class','lineContainer')
+		.append('path')
+		.attr("d",function(d){ return lineFunction(d.timeline);})
+		.attr("stroke",function(d){return z(d.user);})
+		.attr("stroke-width", 2)
+		.attr("fill", "none")
+		.attr("stroke-dasharray",1)
+		.attr('stroke-dashoffset', function() { return this.getTotalLength(); })
+		.transition()
+		.duration(10000)
+		.ease("linear")
+		.attr("stroke-dasharray", function() { return this.getTotalLength(); })
+		.attr("stroke-dashoffset",0)
+		    
 	}
+	
 	
 	isUserLoggedIn();
 	getRanking();

@@ -165,6 +165,17 @@ module.exports = {
 						errorFlag = true;
 						match.matchday = -1;
 					}
+					Team.find({name:match.teamhome}).exec(function(err,teams){
+						if (teams.length == 0){
+							Team.create({name:match.teamhome,
+								wins : 0,
+								draws : 0,
+								losses : 0,
+								points : 0}).exec(function(err,newItem){
+									console.log(newItem);
+								});
+						}
+					});
 					Result.find({matchday:match.matchday,teamhome:match.teamhome}).exec(
 							function(err, results) {
 								console.log(index);

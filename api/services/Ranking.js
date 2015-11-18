@@ -7,5 +7,17 @@ module.exports = {
 				user.updateNumberTendencyBets();
 			});
 		});
+	},
+	updateTeamRanking : function(){
+		Team.find().exec(function(err,teams){
+			teams.forEach(function(team){
+				team.getTeamStatistics(function(stats){
+					team.wins = stats.wins;
+					team.draws = stats.draws;
+					team.losses = stats.losses;
+					team.save();
+				});
+			});
+		});
 	}
 }

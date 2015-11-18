@@ -133,6 +133,7 @@ module.exports = {
 							}
 							if(matchesLeft == 0){
 								Ranking.updateUserRanking();
+								Ranking.updateTeamRanking();
 							}
 						});
 			});

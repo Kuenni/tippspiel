@@ -26,7 +26,7 @@ module.exports = {
 						homeTeamResultsLeft -= 1;
 						var deltaGoals = parseInt(result.goalshome) - parseInt(result.goalsguest);
 						if(result.goalshome == -1 || result.goalsguest == -1 || result.goalshome == null || result.goalsguest == null){
-							return;
+							
 						} else if(deltaGoals > 0){
 							nWin += 1;
 						} else if (deltaGoals == 0){
@@ -40,7 +40,6 @@ module.exports = {
 									var deltaGoals = innerResult.goalshome - innerResult.goalsguest;
 									if(innerResult.goalshome == -1 || innerResult.goalsguest == -1
 											|| innerResult.goalshome == null || innerResult.goalsguest == null){
-										return;
 									} else if(deltaGoals < 0){
 										nWin += 1;
 									} else if (deltaGoals == 0){
@@ -49,7 +48,7 @@ module.exports = {
 										nLoss += 1;
 									}
 								});
-								callback({wins : nWin, draws : nDraw, losses : nLoss});
+								return callback({wins : nWin, draws : nDraw, losses : nLoss});
 							});
 						}
 					});

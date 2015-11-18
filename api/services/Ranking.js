@@ -15,7 +15,10 @@ module.exports = {
 					team.wins = stats.wins;
 					team.draws = stats.draws;
 					team.losses = stats.losses;
+					console.log("Das ist ein Test");
+					team.points = 3*stats.wins + 1 * stats.draws;
 					team.save();
+					return;
 				});
 			});
 		});

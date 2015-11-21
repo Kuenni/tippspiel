@@ -54,7 +54,7 @@ resultsApp.controller('ResultsController', function($scope, $http, $log) {
 	//Get current matchday
 	$http({method: 'GET',
 		url : 'http://www.openligadb.de/api/getcurrentgroup/bl1'}).success(function(data){
-			$scope.matchdaySelector = $scope.matchdays[parseInt(data.GroupName.split('.')[0])];
+			$scope.matchdaySelector = $scope.matchdays[parseInt(data.GroupName.split('.')[0])-1];
 			$scope.printSelectedMatchday();
 		})
 });

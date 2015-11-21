@@ -58,6 +58,18 @@ mainPageApp.controller('MainPageController', function($scope, $http, $log) {
 		});
 	}
 	
+	var getTeamRanking = function(){
+		$http({
+			method : "GET",
+			url : "/team",
+		}).success(function(data) {
+			var result = data.userRankings;
+			$scope.teams = data;
+		}).error(function(data) {
+			alert("Team Ranking Fails");
+		});
+	}
+	
 	var timeline = function createTimelinePlot(data) {
 		var margin = {top: 20, right: 20, bottom: 30, left: 40},
 		width = 960 - margin.left - margin.right,
@@ -179,12 +191,11 @@ mainPageApp.controller('MainPageController', function($scope, $http, $log) {
 		.attr("stroke",function(d){return z(d.user);})
 		.attr("stroke-width", 2)
 		.attr("fill", "none")
-		.attr("stroke-dasharray",1)
+		.attr("stroke-dasharray", function() { return this.getTotalLength(); })
 		.attr('stroke-dashoffset', function() { return this.getTotalLength(); })
 		.transition()
-		.duration(10000)
+		.duration(5000)
 		.ease("linear")
-		.attr("stroke-dasharray", function() { return this.getTotalLength(); })
 		.attr("stroke-dashoffset",0)
 		    
 	}
@@ -192,6 +203,7 @@ mainPageApp.controller('MainPageController', function($scope, $http, $log) {
 	
 	isUserLoggedIn();
 	getRanking();
+	getTeamRanking();
 	$http.get('timeline').success(function(data){
 		timeline(data);
 	});

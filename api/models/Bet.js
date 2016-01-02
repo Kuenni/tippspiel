@@ -5,6 +5,13 @@
  * @docs        :: http://sailsjs.org/#!documentation/models
  */
 
+function sign(x){
+    if( +x === x ) { // check if a number was given
+        return (x === 0) ? x : (x > 0) ? 1 : -1;
+    }
+    return NaN;
+}
+
 module.exports = {
 
 		attributes: {
@@ -38,7 +45,7 @@ module.exports = {
 					return 2;
 				}
 				//Correct tendency
-				else if(Math.sign(deltaGoalsResult) == Math.sign(deltaGoalsBet)){
+				else if(sign(deltaGoalsResult) == sign(deltaGoalsBet)){
 					return 1;
 				}
 				return 0;

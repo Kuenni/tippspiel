@@ -96,7 +96,7 @@ module.exports = {
 		},
 		getUser : function(req,res){
 			if (req.session.user != undefined){
-				res.json({username:user.username});
+				res.json({username:req.session.user.username});
 			} else {
 				res.json({username:undefined});
 			}
@@ -173,12 +173,14 @@ module.exports = {
 								draws : 0,
 								losses : 0,
 								points : 0}).exec(function(err,newItem){
+									console.log('MainController:' + 177);
 									console.log(newItem);
 								});
 						}
 					});
 					Result.find({matchday:match.matchday,teamhome:match.teamhome}).exec(
 							function(err, results) {
+								console.log('MainController:' + 184);
 								console.log(index);
 								if (err) {
 									console.log("DB Error in addMatchData");

@@ -57,7 +57,6 @@ betsApp.controller('BetsController', function($scope, $http, $log) {
 						matchday : $scope.matchdaySelector.value
 					}
 				}).success(function(data){
-					//Little unfortunate naming of variables when building the bet from the match
 					var matchesLeft = data.length;
 					data.forEach(function(match){
 						$http.post('/bet',{
@@ -67,19 +66,21 @@ betsApp.controller('BetsController', function($scope, $http, $log) {
 							teamhome : match.teamhome,
 							teamguest : match.teamguest,
 							goalshome : -1,
-							goalsguest: -1});
-						match.goalshome = -1;
-						match.goalsguest = -1;
-						match.match = match.id;
-						match.user = $scope.user;
-						delete match.id;
-						matchesLeft -= 1;
-						if(matchesLeft == 0){
-							$scope.matches = data;
-						}
+							goalsguest: -1}).success(function(result){
+								matchesLeft -= 1;
+								if(matchesLeft == 0){
+									//Retry request, when bets were created
+									$http.get('/bet',
+											{params : {	"matchday" : $scope.matchdaySelector.value,
+												"user" : $scope.user}
+											}).success(function(betsCreated) {
+												$scope.matches = betsCreated;
+											});
+								}
+							});
 					});
 				});
-			}else{
+			} else{
 				$scope.matches = bets;
 			}
 		});

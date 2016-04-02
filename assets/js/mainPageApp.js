@@ -79,8 +79,10 @@ mainPageApp.controller('MainPageController', function($scope, $http, $log) {
 		var zDomain = [];
 		
 		data.forEach(function(timelineObject){
-			if (xMax < timelineObject.timeline.length){
-				xMax = timelineObject.timeline.length;
+			timelineLength = timelineObject.timeline.length;
+			maxLocalMatchday = timelineObject.timeline[timelineLength - 1].matchday;
+			if (xMax < maxLocalMatchday ){
+				xMax = maxLocalMatchday;
 			}
 			zDomain.push(timelineObject.user);
 		});

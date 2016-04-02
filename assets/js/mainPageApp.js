@@ -80,7 +80,14 @@ mainPageApp.controller('MainPageController', function($scope, $http, $log) {
 		
 		data.forEach(function(timelineObject){
 			timelineLength = timelineObject.timeline.length;
-			maxLocalMatchday = timelineObject.timeline[timelineLength - 1].matchday;
+			maxLocalMatchday = 1
+			//Search maximum in timeline of a user first
+			//then search global maximum
+			timelineObject.timeline.forEach(function(dataPoint){
+				if(maxLocalMatchday < dataPoint.matchday){
+					maxLocalMatchday = dataPoint.matchday;
+				}
+			});
 			if (xMax < maxLocalMatchday ){
 				xMax = maxLocalMatchday;
 			}

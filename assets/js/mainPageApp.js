@@ -1,11 +1,14 @@
 var mainPageApp = angular.module('mainPageApp', []); // Defines an angular
 														// module
-
+var sortingOrder = 'points'; //Default sorting order
 mainPageApp.controller('MainPageController', function($scope, $http, $log) {
 	// $log is used for console log
 	// $http is used to communicate with the server
 	// $scope defines the scope of controller
 	
+	// init
+	$scope.sortingOrder = sortingOrder;
+	$scope.reverse = true;
 	$scope.pointsCorrect = 5;
 	$scope.pointsDifference = 3;
 	$scope.pointsTrend = 1;
@@ -15,6 +18,13 @@ mainPageApp.controller('MainPageController', function($scope, $http, $log) {
 		parseInt(item.nDiff)*$scope.pointsDifference +
 		parseInt(item.nCorrect)*$scope.pointsCorrect;
 	}
+
+	// change sorting order
+	$scope.sort_by = function(newSortingOrder) {
+	if ($scope.sortingOrder == newSortingOrder)
+		$scope.reverse = !$scope.reverse;
+	$scope.sortingOrder = newSortingOrder;
+	};
 
 	$scope.login = function(){
 		var username = $("#loginName").val();
@@ -63,7 +73,14 @@ mainPageApp.controller('MainPageController', function($scope, $http, $log) {
 			method : "GET",
 			url : "/team",
 		}).success(function(data) {
-			var result = data.userRankings;
+			//This is a hotfix. On creation of the team objects the data type was
+			//probably wrong. If the model really contains int this might be unecessary
+			data.forEach(function(team){
+				team.wins = parseInt(team.wins);
+				team.losses = parseInt(team.losses);
+				team.draws = parseInt(team.draws);
+				team.points = parseInt(team.points);
+			});	
 			$scope.teams = data;
 		}).error(function(data) {
 			alert("Team Ranking Fails");

@@ -73,6 +73,10 @@ module.exports = {
 					var userTimeline = {user:user.username,timeline:[]};
 					//Unary "+" means cast value to int
 					user.bets.forEach(function(bet){
+						//Continue if the bet cannot be completely evaluated
+						if(+bet.betresultcode === -1){
+							return;
+						}
 						if(userTimeline.timeline.length != 0 &&
 								userTimeline.timeline[userTimeline.timeline.length - 1].matchday === +bet.matchday){
 							userTimeline.timeline[userTimeline.timeline.length - 1].points += +bet.betresultcode;

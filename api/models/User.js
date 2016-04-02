@@ -17,6 +17,7 @@ module.exports = {
 				collection: 'bet',
 				via : 'userMod'
 			},
+			//TODO: Which of the functions below do I still use?
 			updateBetStatistics : function(callback){
 				var requestedUser = this;
 				var nCorrect = 0;

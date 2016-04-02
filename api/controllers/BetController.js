@@ -72,7 +72,9 @@ module.exports = {
 					usersLeft -= 1;
 					var userTimeline = {user:user.username,timeline:[]};
 					//Unary "+" means cast value to int
-					user.bets.forEach(function(bet){
+					user.bets.sort(function(a,b){
+						return a.matchday - b.matchday;
+					}).forEach(function(bet){
 						//Continue if the bet cannot be completely evaluated
 						if(+bet.betresultcode === -1){
 							return;

@@ -1,0 +1,25 @@
+<body>
+	<div class="container">
+		<h1>Neue Saison</h1>
+		<div>
+			<h3><span class="label label-default"> Signup </span></h3>
+			<form class="form-inline" id="new-season-form" action="/season/create" method="POST">
+				<div class="form-group">
+					<label for="seasonName">Name</label>
+					<input type="text" name="seasonName" id="seasonName" placeholder="2016/2017" />
+				</div>
+				<div class="form-group">
+					<label for="leagueShortcut">Liga Shortcut</label>
+					<input type="text" name="leagueShortcut" id="leagueShortcut" placeholder="bl1" />
+				</div>
+				<div class="form-group">
+					<label for="leagueSeason">Liga Saison</label>
+					<input type="text" name="leagueSeason" id="leagueSeason" placeholder="2016" />
+				</div>
+				<button type="submit" class="btn btn-primary" id="submitButtonn">
+					Signup
+				</button>
+			</form>
+		</div>
+	</div>
+</body>

@@ -26,7 +26,7 @@ module.exports = {
 					this.updateCachedAttributes();
 				}
 				//Ensure no -1 values
-				return this.cachedCorrect > 0 this.cachedCorrect : 0;
+				return this.cachedCorrect > 0 ? this.cachedCorrect : 0;
 			},
 			/*
 			 * Return cached attribute
@@ -36,7 +36,7 @@ module.exports = {
 					this.updateCachedAttributes();
 				}	
 				//Ensure no -1 values
-				return this.cachedDifference > 0 this.cachedDifference : 0;
+				return this.cachedDifference > 0 ? this.cachedDifference : 0;
 			},
 			/*
 			 * Return cached attribute
@@ -46,7 +46,7 @@ module.exports = {
 					this.updateCachedAttributes();
 				}
 				//Ensure no -1 values
-				return this.cachedTrend > 0 this.cachedTrend : 0;
+				return this.cachedTrend > 0 ? this.cachedTrend : 0;
 			},
 			/*
 			 * Check whether update of the cached attributes is needed

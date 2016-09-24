@@ -1,6 +1,10 @@
 <script src="//d3js.org/d3.v3.min.js" charset="utf-8"></script>
 <body ng-app="mainPageApp">
 	<div class="container" ng-controller="MainPageController">
+		<div id="seasonSelectDiv">
+			<select ng-options="season.seasonName for season in seasons" ng-model="selectedSeason">
+			</select>		  
+		</div>
 		<div ng-if="!loggedIn">
 			<h2><span class="label label-warning">Nicht eingeloggt!</span></h2>
 			<form class="form-inline" id="login-form">

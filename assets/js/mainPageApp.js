@@ -10,6 +10,15 @@ mainPageApp.controller('MainPageController', function($scope, $http, $log) {
 	$scope.pointsDifference = 3;
 	$scope.pointsTrend = 1;
 	
+	getSeasons = function(){
+		//Get the seasons
+		$http.get('/season').success(function(data){
+			$scope.seasons = data;
+		});
+	}
+	
+
+	
 	$scope.getSum = function(item){
 		return parseInt(item.nTrend)*$scope.pointsTrend + 
 		parseInt(item.nDiff)*$scope.pointsDifference +
@@ -216,4 +225,5 @@ mainPageApp.controller('MainPageController', function($scope, $http, $log) {
 	$http.get('timeline').success(function(data){
 		timeline(data);
 	});
+	getSeasons();
 });

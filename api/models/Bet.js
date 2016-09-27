@@ -6,49 +6,104 @@
  */
 
 function sign(x){
-    if( +x === x ) { // check if a number was given
-        return (x === 0) ? x : (x > 0) ? 1 : -1;
-    }
-    return NaN;
+	if( +x === x ) { // check if a number was given
+		return (x === 0) ? x : (x > 0) ? 1 : -1;
+	}
+	return NaN;
 }
 
 module.exports = {
 
 		attributes: {
-			user: 'STRING',
 			matchday: 'INT',
 			teamhome: 'STRING',
 			teamguest:'STRING',
-			goalshome: 'INT',
-			goalsguest: 'INT',
-			season: 'STRING',
-			betresultcode: 'INT',
-			userMod: {
+			logoTeamHome: 'STRING',
+			logoTeamGuest: 'STRING',
+			leagueSeason: 'STRING',
+			cachedPoints: {
+				type: 'INT',
+				defaultsTo : -1
+			},
+			cachedGoalsHome: {
+				type: 'INT',
+				defaultsTo : -1
+			},
+			cachedGoalsGuest: {
+				type: 'INT',
+				defaultsTo : -1
+			},
+			betHome: {
+				type: 'INT',
+				defaultsTo: -1
+			},
+			betGuest: {
+				type : 'INT',
+				defaultsTo: -1
+			},
+			matchId: 'INT',
+			user: {
 				model: 'user'
 			},
-			match : {
-				model: 'result'
+			season: {
+				model: 'season'
 			},
-			getBetResultCode : function(){
-				if (this.match.goalsguest == -1 || this.match.goalshome == -1 ||
-						this.goalsguest == -1 || this.goalshome == -1 ){
-					return -1;
+			/*
+			 * Return cached attribute
+			 */
+			_points: function(){
+				if(this.isNeedsUpdate()){
+					console.log("Need update");
+					this.updateCachedResults();
 				}
-				var deltaGoalsResult = this.match.goalshome - this.match.goalsguest;
-				var deltaGoalsBet = this.goalshome - this.goalsguest;
-				//Correct bet
-				if(this.match.goalshome == this.goalshome && this.match.goalsguest == this.goalsguest){
-					return 3;
-				}
-				//Correct difference
-				else if (deltaGoalsResult == deltaGoalsBet){
-					return 2;
-				}
-				//Correct tendency
-				else if(sign(deltaGoalsResult) == sign(deltaGoalsBet)){
-					return 1;
-				}
-				return 0;
+				//Ensure no -1 values
+				console.log("After possible update");
+				return this.cachedPoints > 0 ? this.cachedPoints : 0;
+			},
+			/*
+			 * Check whether update of the cached attributes is needed
+			 */
+			isNeedsUpdate: function() {
+				return this.cachedPoints == -1 || this.cachedGoalsHome == -1 || this.cachedGoalsGuest == -1;
+			},
+			/*
+			 * Update the cached attributes in this bet
+			 */
+			updateCachedResults : function(){
+				var localBet = this;
+				LigaDbCaller.getRelevantResult(localBet,function(err,game){
+					if(err) return -1;
+					var endResult;
+					game.MatchResults.forEach(function(result){
+						if(result.ResultOrderID == 2){
+							endResult = result;
+						}
+					});
+					if(!endResult){
+						return -1;
+					}
+					localBet.cachedGoalsHome = endResult.PointsTeam1;
+					localBet.cachedGoalsGuest = endResult.PointsTeam2;
+					if (localBet.cachedGoalsGuest == -1 || localBet.cachedGoalsHome == -1 ||
+							localBet.betGuest == -1 || localBet.betHome == -1 ){
+						return -1;
+					}
+					var deltaGoalsResult = localBet.cachedGoalsHome - localBet.cachedGoalsGuest;
+					var deltaGoalsBet = localBet.betHome - localBet.betGuest;
+					//Correct bet
+					if(localBet.cachedGoalsHome == localBet.betHome && localBet.cachedGoalsGuest == localBet.betGuest){
+						localBet.cachedPoints = 3;
+					}
+					//Correct difference
+					else if (deltaGoalsResult == deltaGoalsBet){
+						localBet.cachedPoints = 2;
+					}
+					//Correct tendency
+					else if(sign(deltaGoalsResult) == sign(deltaGoalsBet)){
+						localBet.cachedPoints = 1;
+					}
+					localBet.save();
+				});
 			}
 		}
 };

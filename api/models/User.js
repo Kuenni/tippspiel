@@ -10,10 +10,10 @@ module.exports = {
 		attributes: {
 			username: 'STRING',
 			password: 'STRING',
-			cachedCorrect: 'INT',
-			cachedDiff: 'INT',
-			cachedTrend: 'INT',
-			cachedPoints: 'INT',
+			cachedCorrect: {type: 'INT', defaultsTo: -1},
+			cachedDiff: {type: 'INT', defaultsTo: -1},
+			cachedTrend: {type: 'INT', defaultsTo: -1},
+			cachedPoints: {type: 'INT', defaultsTo: -1},
 			bets: {
 				collection: 'bet',
 				via : 'user'

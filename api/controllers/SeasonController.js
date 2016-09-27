@@ -19,7 +19,7 @@ module.exports = {
 	  			req.session.messages['error'].push(err['details']);
 	  			return res.redirect('season/new');
 	  		}
-	  		return res.redirect('/season');
+	  		return res.redirect('/');
 	  	});
 	}
 };

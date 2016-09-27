@@ -19,9 +19,9 @@ module.exports.routes = {
 			controller: 'main',
 			action: 'logout'
 		},
-		'/username' : {
+		'/currentUser' : {
 			controller : 'main',
-			action : 'getUser'
+			action : 'currentUser'
 		},
 		'/results' : {
 			controller : 'result',
@@ -29,6 +29,10 @@ module.exports.routes = {
 		},
 		'/loadData':{
 			view: 'main/loadData'
+		},
+		'/loadMatchday':{
+			controller: 'bet',
+			action: 'loadMatchday'
 		},
 		'/addToDatabase':{
 			controller: 'main',

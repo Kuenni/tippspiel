@@ -5,8 +5,54 @@
  * @help :: See http://sailsjs.org/#!/documentation/concepts/Controllers
  */
 
-var SEASON = "2015/2016";
 module.exports = {
+		loadMatchday: function(req,res){
+			query = req.query;
+			Season.findOne({id:query.season}).exec(function(err,season){
+				if(err) return res.send(err,500);
+				LigaDbCaller.getMatches(season,query.matchday,function(error,matchdayData){
+					if(error) return res.send(500,error);
+					var bets = [];
+					matchdayData = JSON.parse(matchdayData);
+					var toProcess = matchdayData.length;
+					matchdayData.forEach(function(match){
+						Bet.create(
+								{user:query.user,
+								matchday:query.matchday,
+								matchId:match.MatchID,
+								season:query.season,
+								teamhome: match.Team1.TeamName,
+								teamguest: match.Team2.TeamName,
+								logoTeam1: match.Team1.TeamIconUrl,
+								logoTeam2: match.Team2.TeamIconUrl
+							}).exec(function(err,createdBet){
+								if(err) return res.send(500,err);
+								toProcess -= 1;
+								bets.push(createdBet);
+								if(toProcess == 0){
+									res.json(bets);
+								}
+							});
+					});
+				});
+			});
+		},
+		index: function(req,res){
+			if(req.query){
+				Bet.find(req.query).populate('season').exec(function(err,bets){
+					if(err) return res.send(500,err);
+					bets.forEach(function(bet){
+						bet.points = bet._points();
+					});
+					return res.json(bets)
+				});
+			} else{
+			Bet.find().populate('season').exec(function(err,bets){
+				if(err) return res.send(500,err);
+				return res.json(bets);
+			});
+			}
+		},
 		updateBets: function(req,res){
 			var allBets = req.param("matches");
 			var matchesLeft = allBets.length;

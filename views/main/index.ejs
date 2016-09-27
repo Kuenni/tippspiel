@@ -1,6 +1,7 @@
 <script src="//d3js.org/d3.v3.min.js" charset="utf-8"></script>
 <body ng-app="mainPageApp">
 	<div class="container" ng-controller="MainPageController">
+		<div ng-if="loggedIn">
 		<div id="selectorsDiv">
 		<span id="seasonSelectDiv">
 			Saison:
@@ -67,7 +68,7 @@
 				<button ng-click="storeUpdates()">Speichern</button>
 			</div>
 		</div>
-
+</div>
 		<div ng-if="!loggedIn">
 			<h2><span class="label label-warning">Nicht eingeloggt!</span></h2>
 			<form class="form-inline" id="login-form">

@@ -90,7 +90,7 @@ module.exports = {
 							req.session.user = user;
 							req.session.authenticated = true;
 							req.param({user:{username:user.username,id:user.id}});
-							return;
+							return res.send(200);
 						} else {
 							console.log("wrong pw");
 							res.statusCode = 400;

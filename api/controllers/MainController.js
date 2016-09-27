@@ -77,6 +77,7 @@ module.exports = {
 						if (hasher.verify(password, user.password)) {
 							req.session.user = user;
 							req.session.authenticated = true;
+							req.param({user:{username:user.username,id:user.id}});
 							return res.redirect("/bets");
 						} else {
 							console.log("wrong pw");
@@ -86,7 +87,6 @@ module.exports = {
 							});
 						}
 					} else {
-						console.log("user unknown");
 						res.send(404, {
 							error : "User not Found"
 						});
@@ -94,11 +94,11 @@ module.exports = {
 				}
 			});
 		},
-		getUser : function(req,res){
+		currentUser : function(req,res){
 			if (req.session.user != undefined){
-				res.json({username:req.session.user.username});
+				res.json({user:{username:req.session.user.username,id:req.session.user.id}});
 			} else {
-				res.json({username:undefined});
+				res.json({message:"Not logged in!"});
 			}
 		},
 		listMatchday : function(req, res) {

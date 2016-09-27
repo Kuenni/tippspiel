@@ -10,6 +10,21 @@ mainPageApp.controller('MainPageController', function($scope, $http, $log) {
 	$scope.pointsDifference = 3;
 	$scope.pointsTrend = 1;
 	
+	/*
+	 * Create list of matchdays for selector
+	 */
+	var matchdays = [];
+	for (var i = 1; i < 35; i++) {
+		matchdays.push({
+			"name" : i + '. Spieltag',
+			"value" : i
+		});
+	};
+	$scope.matchdays = matchdays;
+	
+	/*
+	 * Get Seasons that are stored in local DB
+	 */
 	getSeasons = function(){
 		//Get the seasons
 		$http.get('/season').success(function(data){
@@ -17,7 +32,45 @@ mainPageApp.controller('MainPageController', function($scope, $http, $log) {
 		});
 	}
 	
-
+	$scope.addSeason = function(){
+		console.log("add season");
+		window.location.href = "/season/new";
+	}
+		
+	/*
+	 * Call update for the listed bets
+	 */
+	$scope.storeUpdates = function(){
+		$scope.bets.forEach(function(bet){
+			$http.post('/bet/' + bet.id,
+					bet ).success(function(data){
+						$scope.printSelectedMatchday();
+					});
+		});
+	};
+	
+	/*
+	 * fill the bets for the matchday in the angular driven table
+	 * Creates bets, if necessary
+	 */
+	$scope.printSelectedMatchday = function(){
+		$http.get('/bet',
+				{params : {	"matchday" : $scope.selectedMatchday.value,
+							"user" : $scope.user.id,
+							"season" : $scope.selectedSeason.id
+				}}).success(function(data){
+					$scope.bets = data;
+					if(data.length == 0){
+						$http.get('/loadMatchday',
+								{params : {	"matchday" : $scope.selectedMatchday.value,
+									"user" : $scope.user.id,
+									"season" : $scope.selectedSeason.id
+						}}).success(function(data){
+							$scope.bets = data;
+						});
+					}
+				});
+	};
 	
 	$scope.getSum = function(item){
 		return parseInt(item.nTrend)*$scope.pointsTrend + 
@@ -25,6 +78,9 @@ mainPageApp.controller('MainPageController', function($scope, $http, $log) {
 		parseInt(item.nCorrect)*$scope.pointsCorrect;
 	}
 
+	/*
+	 * Login 
+	 */
 	$scope.login = function(){
 		var username = $("#loginName").val();
 		var password = $("#loginPassword").val();
@@ -33,7 +89,7 @@ mainPageApp.controller('MainPageController', function($scope, $http, $log) {
 				username : username,
 				password : password
 			}, function() {
-				window.location = "/bets";
+				window.location = "/";
 			}).fail(function(res, textStatus, err) {
 				console.log("res: " + res);
 				console.log("status: " + textStatus);
@@ -47,14 +103,20 @@ mainPageApp.controller('MainPageController', function($scope, $http, $log) {
 		return false;
 	}
 	
+	/*
+	 * Get whether a user is logged in and store
+	 * user instance in scope
+	 */
 	var isUserLoggedIn = function(){
 		//Get the username for the logged-in user
-		$http.get('/username').success(function(data){
-			if(data.username){
+		$http.get('/currentUser').success(function(data){
+			if(data.user){
 				$scope.$parent.loggedIn = true;
+				$scope.user = data.user;
 			}
 		});
 	}
+	
 	var getRanking = function() {
 		$http({
 			method : "GET",
@@ -218,7 +280,7 @@ mainPageApp.controller('MainPageController', function($scope, $http, $log) {
 		    
 	}
 	
-	
+	//Call functions when page is done
 	isUserLoggedIn();
 	getRanking();
 	getTeamRanking();

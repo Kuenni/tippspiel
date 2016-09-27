@@ -1,10 +1,73 @@
 <script src="//d3js.org/d3.v3.min.js" charset="utf-8"></script>
 <body ng-app="mainPageApp">
 	<div class="container" ng-controller="MainPageController">
-		<div id="seasonSelectDiv">
-			<select ng-options="season.seasonName for season in seasons" ng-model="selectedSeason">
-			</select>		  
+		<div id="selectorsDiv">
+		<span id="seasonSelectDiv">
+			Saison:
+			<select ng-model="selectedSeason">
+				<option value="" disabled>---Bitte  w&auml;hlen---</option>
+				<option ng-repeat="season in seasons" value="season.seasonName">
+					{{season.seasonName}}
+				</option>
+				<option ng-click="addSeason()" value="">
+					Saison hinzuf&uuml;gen...
+				</option>
+			</select>
+		</span>
+		<span id="matchdaySelectDiv" ng-if="selectedSeason" ng-init="false" >
+			Spieltag:
+			<select ng-options="day.name for day in matchdays" ng-model="$parent.selectedMatchday"
+			ng-change="printSelectedMatchday()" >
+			<option disabled value="">---Bitte  w&auml;hlen---</option>
+			</select>
+		</span>
 		</div>
+		<div id="betsDiv" ng-if="selectedMatchday" ng-init="false">
+		  <div id="resultsTable">
+				<table class="table table-striped table-hover">
+					<thead>
+						<th></th>
+						<th>Heim</th>
+						<th></th>
+						<th>Gast</th>
+						<th class="text-center">Tore Heim</th>
+						<th></th>
+						<th class="text-center">Tore Gast</th>
+						<th></th>
+						<th class="text-center">Ergebnis Heim</th>
+						<th></th>
+						<th class="text-center">Ergebnis Gast</th>
+						<th></th>
+						<th class="text-center">Punkte</th>
+					</thead>
+					<tr ng-repeat="bet in bets">
+						<td><img src={{bet.logoTeamHome}}></td>
+						<td>{{bet.teamhome}}</td>
+						<td><img src={{bet.logoTeamGuest}}></td>
+						<td>{{bet.teamguest}}</td>
+						<td>
+						<input type="text" class="text-center" ng-model="bet.betHome"/>
+						</td>
+						<td class="text-center">:</td>
+						<td>
+						<input type="text" class="text-center" ng-model="bet.betGuest"/>
+						</td>
+						<td></td>
+						<td class="text-center">
+							{{bet.cachedGoalsHome}}
+						</td>
+						<td class="text-center">:</td>
+						<td class="text-center">
+							{{bet.cachedGoalsGuest}}
+						</td>
+						<td></td>
+						<td class="text-center">{{bet.cachedPoints}}</td>
+					</tr>
+				</table>
+				<button ng-click="storeUpdates()">Speichern</button>
+			</div>
+		</div>
+
 		<div ng-if="!loggedIn">
 			<h2><span class="label label-warning">Nicht eingeloggt!</span></h2>
 			<form class="form-inline" id="login-form">

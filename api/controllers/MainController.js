@@ -6,9 +6,15 @@
  */
 
 module.exports = {
+		/*
+		 * render index page
+		 */
 		index : function(req, res) {
 			res.view();
 		},
+		/*
+		 * Try to signup a user
+		 */
 		signup : function(req, res) {
 			if (req.method === 'GET'){
 				res.view();
@@ -51,11 +57,17 @@ module.exports = {
 				}
 			});
 		},
+		/*
+		 * Logout user
+		 */
 		logout: function(req,res){
 			req.session.user = undefined;
 			req.session.authenticated = false;
 			res.redirect('/');
 		},
+		/*
+		 * Login user
+		 */
 		login : function(req, res) {
 			if (req.method === 'GET'){
 				res.view();
@@ -78,7 +90,7 @@ module.exports = {
 							req.session.user = user;
 							req.session.authenticated = true;
 							req.param({user:{username:user.username,id:user.id}});
-							return res.redirect("/bets");
+							return;
 						} else {
 							console.log("wrong pw");
 							res.statusCode = 400;
@@ -94,6 +106,9 @@ module.exports = {
 				}
 			});
 		},
+		/*
+		 * Get info on the currently logged in user
+		 */
 		currentUser : function(req,res){
 			if (req.session.user != undefined){
 				res.json({user:{username:req.session.user.username,id:req.session.user.id}});
@@ -101,6 +116,9 @@ module.exports = {
 				res.json({message:"Not logged in!"});
 			}
 		},
+		/*
+		 * TODO: Still needed?
+		 */
 		listMatchday : function(req, res) {
 			Result.findByMatchday(req.param("matchday")).exec(
 					function(err, results) {
@@ -120,6 +138,9 @@ module.exports = {
 						res.send(200, {matches : results});
 					});
 		},
+		/*
+		 * TODO: Still needed?
+		 */
 		updateResults: function(req,res){
 			var matches = req.param("matches");
 			var matchesLeft = matches.length;
@@ -139,6 +160,9 @@ module.exports = {
 			});
 			res.send(200);
 		},
+		/*
+		 * TODO: Still needed?
+		 */
 		addToDatabase : function(req, res) {
 			console.log("add to database");
 			if (req.method === 'GET')

@@ -2,6 +2,9 @@ var request = require('request');
 
 module.exports = {
 
+		/*
+		 * Get a specific match for evaluation of results
+		 */
 		getRelevantResult : function(bet,callback){
 			console.log(bet);
 			request.get({
@@ -20,6 +23,9 @@ module.exports = {
 				}
 			});
 		},
+		/*
+		 * Get meatches for a given matchday and season
+		 */
 		getMatches : function(season, matchday, callback){
 			request.get({
 				url: "http://www.openligadb.de/api/getmatchdata/" + season.leagueShortcut + "/" + season.leagueSeason + "/" + matchday

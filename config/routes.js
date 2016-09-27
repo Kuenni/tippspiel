@@ -23,32 +23,9 @@ module.exports.routes = {
 			controller : 'main',
 			action : 'currentUser'
 		},
-		'/results' : {
-			controller : 'result',
-			action : 'results'
-		},
-		'/loadData':{
-			view: 'main/loadData'
-		},
 		'/loadMatchday':{
 			controller: 'bet',
 			action: 'loadMatchday'
-		},
-		'/addToDatabase':{
-			controller: 'main',
-			action : 'addToDatabase'
-		},
-		'/results/update':{
-			controller: 'main',
-			action: 'updateResults'
-		},
-		'/bets' : {
-			controller : 'bet',
-			action : 'bets'
-		},
-		'/bets/update' : {
-			controller : 'bet',
-			action : 'updateBets'
 		},
 		'/timeline' : {
 			controller : 'bet',

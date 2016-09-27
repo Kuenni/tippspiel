@@ -25,6 +25,10 @@ module.exports = {
 				unique: true,
 				required: true,
 				minLength: 1
+			},
+			bet: {
+				collection: 'bet',
+				via : 'season'
 			}
 		}
 };

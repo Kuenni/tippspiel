@@ -115,5 +115,20 @@ module.exports = {
 			} else {
 				res.json({message:"Not logged in!"});
 			}
+		},
+		currentMatchday : function(req,res){
+			var season = req.param('season');
+			if(!season){
+				res.json({currentMatchday : 0});
+			}
+			Season.findOne({id:season}).exec(function(err,seasonRecord){
+				if(err) return res.send(500);
+				LigaDbCaller.getCurrentMatchday(seasonRecord,function(err, currentMatchday){
+					if(err){
+						return res.send(500);
+					}
+					res.json({currentMatchday:currentMatchday});
+				});
+			});
 		}
 };

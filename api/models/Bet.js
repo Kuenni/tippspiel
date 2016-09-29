@@ -53,11 +53,9 @@ module.exports = {
 			 */
 			_points: function(){
 				if(this.isNeedsUpdate()){
-					console.log("Need update");
 					this.updateCachedResults();
 				}
 				//Ensure no -1 values
-				console.log("After possible update");
 				return this.cachedPoints > 0 ? this.cachedPoints : 0;
 			},
 			/*

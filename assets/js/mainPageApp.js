@@ -32,51 +32,35 @@ mainPageApp.controller('MainPageController', function($scope, $http, $log) {
 		});
 	}
 	
+	/*
+	 * Add a new season to database
+	 */
 	$scope.addSeason = function(){
-		console.log("add season");
 		window.location.href = "/season/new";
 	}
-		
-	/*
-	 * Call update for the listed bets
-	 */
-	$scope.storeUpdates = function(){
-		$scope.bets.forEach(function(bet){
-			$http.post('/bet/' + bet.id,
-					bet ).success(function(data){
-						$scope.printSelectedMatchday();
-					});
-		});
-	};
 	
 	/*
-	 * fill the bets for the matchday in the angular driven table
+	 * Fill the bets for the matchday in the angular driven table
 	 * Creates bets, if necessary
 	 */
 	$scope.printSelectedMatchday = function(){
 		$http.get('/bet',
 				{params : {	"matchday" : $scope.selectedMatchday.value,
 							"user" : $scope.user.id,
-							"season" : $scope.selectedSeason.id
+							"season" : $scope.selectedSeason
 				}}).success(function(data){
 					$scope.bets = data;
 					if(data.length == 0){
 						$http.get('/loadMatchday',
 								{params : {	"matchday" : $scope.selectedMatchday.value,
 									"user" : $scope.user.id,
-									"season" : $scope.selectedSeason.id
+									"season" : $scope.selectedSeason
 						}}).success(function(data){
 							$scope.bets = data;
 						});
 					}
 				});
 	};
-	
-	$scope.getSum = function(item){
-		return parseInt(item.nTrend)*$scope.pointsTrend + 
-		parseInt(item.nDiff)*$scope.pointsDifference +
-		parseInt(item.nCorrect)*$scope.pointsCorrect;
-	}
 
 	/*
 	 * Login 
@@ -117,6 +101,33 @@ mainPageApp.controller('MainPageController', function($scope, $http, $log) {
 		});
 	}
 	
+	$scope.getCurrentMatchday = function(){
+		$http.get('/currentMatchday',
+				{params:{'season':$scope.selectedSeason}}
+		).success(function(data){
+			$scope.selectedMatchday = $scope.matchdays[data.currentMatchday-1];
+			$scope.printSelectedMatchday();
+		})
+	}
+	
+	/*
+	 * Call update for the listed bets
+	 */
+	$scope.storeUpdates = function(){
+		$scope.bets.forEach(function(bet){
+			$http.post('/bet/' + bet.id,
+					bet ).success(function(data){
+						$scope.printSelectedMatchday();
+					});
+		});
+	};
+	
+	$scope.getSum = function(item){
+		return parseInt(item.nTrend)*$scope.pointsTrend + 
+		parseInt(item.nDiff)*$scope.pointsDifference +
+		parseInt(item.nCorrect)*$scope.pointsCorrect;
+	}
+	
 	var getRanking = function() {
 		$http({
 			method : "GET",
@@ -140,7 +151,6 @@ mainPageApp.controller('MainPageController', function($scope, $http, $log) {
 			alert("Team Ranking Fails");
 		});
 	}
-	
 	var timeline = function createTimelinePlot(data) {
 		var margin = {top: 20, right: 20, bottom: 30, left: 40},
 		width = 960 - margin.left - margin.right,

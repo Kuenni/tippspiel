@@ -5,9 +5,9 @@
 		<div id="selectorsDiv">
 		<span id="seasonSelectDiv">
 			Saison:
-			<select ng-model="selectedSeason">
+			<select ng-model="$parent.selectedSeason">
 				<option value="" disabled>---Bitte  w&auml;hlen---</option>
-				<option ng-repeat="season in seasons" value="season.seasonName">
+				<option ng-repeat="season in seasons" value="{{season.id}}" ng-click="getCurrentMatchday()">
 					{{season.seasonName}}
 				</option>
 				<option ng-click="addSeason()" value="">

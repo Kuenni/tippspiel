@@ -23,6 +23,10 @@ module.exports.routes = {
 			controller : 'main',
 			action : 'currentUser'
 		},
+		'/currentMatchday':{
+			controller : 'main',
+			action : 'currentMatchday'
+		},
 		'/loadMatchday':{
 			controller: 'bet',
 			action: 'loadMatchday'

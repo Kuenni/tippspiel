@@ -53,6 +53,19 @@ module.exports = {
 			});
 			}
 		},
+		refresh: function(req,res){
+			if(req.query){
+				Bet.find(req.query).populate('season').exec(function(err,bets){
+					if(err) return res.send(500,err);
+					bets.forEach(function(bet){
+						bet.updateCachedResults();
+					});
+					res.json(bets);
+				});
+			} else {
+				res.json({"message":"Not possible"});
+			}
+		},
 		updateBets: function(req,res){
 			var allBets = req.param("matches");
 			var matchesLeft = allBets.length;

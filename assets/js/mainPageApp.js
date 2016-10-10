@@ -1,14 +1,63 @@
-var mainPageApp = angular.module('mainPageApp', []); // Defines an angular
+var mainPageApp = angular.module('mainPageApp', []);	// Defines an angular
 														// module
 
-mainPageApp.controller('MainPageController', function($scope, $http, $log) {
+mainPageApp.controller('MainPageController', function($scope, $http, $log/*,flash*/) {
 	// $log is used for console log
 	// $http is used to communicate with the server
 	// $scope defines the scope of controller
 	
+	/*
+	mainPageApp.factory("flash", function($rootScope) {
+		var queue = [];
+		var currentMessage = "asdf";
+
+		//$rootScope.$on("$routeChangeSuccess", function() {
+		currentMessage = queue.shift() || "";
+		//});
+
+		return {
+			setMessage: function(message) {
+				queue.push(message);
+			},
+			getMessage: function() {
+				return currentMessage;
+			}
+		};
+	});
+	*/
+
+	/*
+	mainPageApp.controller('FlashController',function($scope,flash){
+		$scope.data = flash.getMessage();
+	});
+	*/
+	
+	//$scope.flash = flash;
+	
 	$scope.pointsCorrect = 5;
 	$scope.pointsDifference = 3;
 	$scope.pointsTrend = 1;
+	
+	$scope.pointsForBet = function(betCode){
+		var points = 0
+		switch (parseInt(betCode)) {
+		case 3:
+			points = 5;
+			break;
+		case 2:
+			points = 3;
+			break;
+		case 1:
+			points = 1;
+			break;
+		default:
+			break;
+		}
+		console.log(points);
+		return points;
+	};
+	
+	$scope.selectedMatchday = {"name":"1. Spieltag","value":"1"};
 	
 	/*
 	 * Create list of matchdays for selector
@@ -101,11 +150,15 @@ mainPageApp.controller('MainPageController', function($scope, $http, $log) {
 		});
 	}
 	
+	/*
+	 * Call to server to find the current matchday
+	 */
 	$scope.getCurrentMatchday = function(){
 		$http.get('/currentMatchday',
 				{params:{'season':$scope.selectedSeason}}
 		).success(function(data){
 			$scope.selectedMatchday = $scope.matchdays[data.currentMatchday-1];
+			//Handle error
 			$scope.printSelectedMatchday();
 		})
 	}

@@ -99,6 +99,8 @@ module.exports = {
 					//Correct tendency
 					else if(sign(deltaGoalsResult) == sign(deltaGoalsBet)){
 						localBet.cachedPoints = 1;
+					} else {
+						localBet.cachedPoints = 0;
 					}
 					localBet.save();
 				});

@@ -13,10 +13,12 @@
 				ng-change="printSelectedMatchday()" >
 					<option disabled value="">---Bitte  w&auml;hlen---</option>
 				</select> </span>
-					<button type="button" class="btn btn-default btn-xs text-right" ng-if="selectedSeason">
+				<button ng-click="storeUpdates()" ng-if="selectedSeason">
+					Speichern
+				</button>
+				<button type="button" class="btn btn-default btn-xs text-right" ng-if="selectedSeason" ng-click="refresh()">
   					<span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
 				</button>
-			<span id="refreshSpan" ng-if="selectedSeason" ng-click="refresh()" ng-init="false">Refresh</span>
 		</div>
 		<div id="betsDiv" ng-if="selectedSeason" ng-init="false">
 			<div id="resultsTable">
@@ -36,7 +38,7 @@
 						<th></th>
 						<th class="text-center">Punkte</th>
 					</thead>
-					<tr ng-repeat="bet in bets">
+					<tr ng-repeat="bet in bets" data-ng-class="{success: bet.cachedPoints==3}">
 						<td><img src={{bet.logoTeamHome}}></td>
 						<td>{{bet.teamhome}}</td>
 						<td><img src={{bet.logoTeamGuest}}></td>
@@ -56,9 +58,6 @@
 						<td class="text-center">{{$parent.pointsForBet(bet.cachedPoints)}}</td>
 					</tr>
 				</table>
-				<button ng-click="storeUpdates()">
-					Speichern
-				</button>
 			</div>
 		</div>
 		<div ng-if="!loggedIn">

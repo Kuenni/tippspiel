@@ -46,29 +46,51 @@
 						<li class=<%= Helper.isCurrentPage(req, 'main', 'index') ? 'active' : ''%>>
 							<a href="/">Home</a>
 						</li>
-						<li class=<%= Helper.isCurrentPage(req, 'main', 'results') ? 'active' : ''%>>
-							<a href="/results">Results</a>
-						</li>
-						<li class=<%= Helper.isCurrentPage(req, 'bet', 'bets') ? 'active' : ''%>>
-							<a href="/bets">Bets</a>
-						</li>
-						<li class=<%= Helper.isCurrentPage(req, 'main', 'login') ? 'active' : ''%>>
-							<a href=
-							<%= Helper.isUserLoggedIn(req) ? '/logout' : '/login'%>>
-							<%= Helper.isUserLoggedIn(req) ? "Logout" : "Login"%></a>
-						</li>
 						<%if( !Helper.isUserLoggedIn(req)){%>
-						<li class=<%= Helper.isCurrentPage(req, 'main', 'signup') ? 'active' : ''%>>
-							<a href="/signup">Signup</a>
-						</li>
+							<li class=<%= Helper.isCurrentPage(req, 'main', 'signup') ? 'active' : ''%>>
+								<a href="/signup">Signup</a>
+							</li>
+						<%} else {%>
+							<li>
+								<a href='/logout'>Logout</a>
+							</li>							
 						<%}%>
-						<li class=<%= Helper.isCurrentPage(req, 'main', 'loadData') ? 'active' : ''%>>
-							<a href="/loadData">Load Data</a>
-						</li>
 					</ul>
 				</div><!-- /.navbar-collapse -->
 			</div><!-- /.container-fluid -->
 		</nav>
+		
+		<!-- Flash messages-->
+	<% if (messages && messages['error'].length > 0) { %>
+		<div class="alert alert-danger">
+			<% messages['error'].forEach(function(message) { %>
+			<%= message %>
+			<br>
+			<% }); %>
+		</div>
+		<br>
+		<% } %>
+		<% if (messages && messages['warning'].length > 0) { %>
+		<div class="alert alert-warning">
+			<% messages['warning'].forEach(function(message) { %>
+			<%= message %>
+			<br>
+			<% }); %>
+		</div>
+		<br>
+		<% } %>
+		<% if (messages && messages['success'].length > 0) { %>
+		<div class="alert alert-success">
+			<% messages['success'].forEach(function(message) { %>
+			<%= message %>
+			<br>
+			<% }); %>
+		</div>
+		<br>
+		<% } %> 
+
+		
+		
 		<%- body %>
 
 		<!--
@@ -121,9 +143,7 @@
 
 		<!--SCRIPTS-->
 		<script src="/js/dependencies/sails.io.js"></script>
-		<script src="/js/betsApp.js"></script>
 		<script src="/js/mainPageApp.js"></script>
-		<script src="/js/resultsApp.js"></script>
 		<!--SCRIPTS END-->
 	</body>
 </html>

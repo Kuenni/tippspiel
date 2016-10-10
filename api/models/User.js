@@ -10,21 +10,61 @@ module.exports = {
 		attributes: {
 			username: 'STRING',
 			password: 'STRING',
-			nCorrect: 'INT',
-			nDiff: 'INT',
-			nTrend: 'INT',
+			cachedCorrect: {type: 'INT', defaultsTo: -1},
+			cachedDiff: {type: 'INT', defaultsTo: -1},
+			cachedTrend: {type: 'INT', defaultsTo: -1},
+			cachedPoints: {type: 'INT', defaultsTo: -1},
 			bets: {
 				collection: 'bet',
-				via : 'userMod'
+				via : 'user'
 			},
-			//TODO: Which of the functions below do I still use?
-			updateBetStatistics : function(callback){
-				var requestedUser = this;
+			/*
+			 * Return cached attribute
+			 */
+			correct : function(){
+				if(this.isNeedsUpdate()){
+					this.updateCachedAttributes();
+				}
+				//Ensure no -1 values
+				return this.cachedCorrect > 0 ? this.cachedCorrect : 0;
+			},
+			/*
+			 * Return cached attribute
+			 */
+			difference : function(){
+				if(this.isNeedsUpdate()){
+					this.updateCachedAttributes();
+				}	
+				//Ensure no -1 values
+				return this.cachedDifference > 0 ? this.cachedDifference : 0;
+			},
+			/*
+			 * Return cached attribute
+			 */
+			trend : function(){
+				if(this.isNeedsUpdate()){
+					this.updateCachedAttributes();
+				}
+				//Ensure no -1 values
+				return this.cachedTrend > 0 ? this.cachedTrend : 0;
+			},
+			/*
+			 * Check whether update of the cached attributes is needed
+			 */
+			isNeedsUpdate : function(){
+				return this.cachedCorrect == -1 || this.cachedDiff == -1 || this.cachedTrend == -1 || this.cachedPoints == -1;
+			},
+			/*
+			 * Update the cached attributes in this bet
+			 */
+			updateCachedAttributes : function(){
 				var nCorrect = 0;
 				var nDiff = 0;
 				var nTrend = 0;
+				var points = 0;
 				this.bets.forEach(function(bet){
 					//unary + means cast to int
+					points += bet.points;
 					switch(+bet.betresultcode){
 					case 3:
 						nCorrect += 1;
@@ -39,55 +79,11 @@ module.exports = {
 						break;
 					}
 				});
-				callback({nCorrect : nCorrect,
-					nDiff : nDiff,
-					nTrend : nTrend});
-			},
-			updateNumberCorrectBets : function(){
-				var requestedUser = this;
-				var requestUsername = this.username;
-				Bet.find({user:this.username}).populateAll().exec(function(err,bets){
-					var correctCounter = 0;
-					bets.forEach(function(bet){
-						var resultCode = bet.getBetResultCode();
-						if(resultCode == 3){
-							correctCounter += 1;
-						}
-						
-					});
-					requestedUser.nCorrect = correctCounter;
-					requestedUser.save();
-				});
-			},
-			updateNumberDifferenceBets : function(){
-				var requestedUser = this;
-				var requestUsername = this.username;
-				Bet.find({user:this.username}).populateAll().exec(function(err,bets){
-					var differenceCounter = 0;
-					bets.forEach(function(bet){
-						var resultCode = bet.getBetResultCode();
-						if(resultCode == 2){
-							differenceCounter += 1;
-						}
-					});
-					requestedUser.nDiff = differenceCounter;
-					requestedUser.save();
-				});
-			},
-			updateNumberTendencyBets : function(callback){
-				var requestedUser = this;
-				var requestUsername = this.username;
-				Bet.find({user:this.username}).populateAll().exec(function(err,bets){
-				var tendencyCounter = 0;				
-				bets.forEach(function(bet){
-					if(bet.getBetResultCode() == 1){
-						tendencyCounter += 1;
-					}
-				});
-				requestedUser.nTrend = tendencyCounter;
-				requestedUser.save();
-				});
-
+				this.cachedCorrect = nCorrect;
+				this.cachedDiff = nDiff;
+				this.cachedTrend = nTrend;
+				this.cachedPoints = points;
+				this.save();
 			}
 		}
 };

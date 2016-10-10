@@ -31,6 +31,10 @@ module.exports.routes = {
 			controller: 'bet',
 			action: 'loadMatchday'
 		},
+		'/refresh':{
+			controller: 'bet',
+			action: 'refresh'
+		},
 		'/timeline' : {
 			controller : 'bet',
 			action : 'pointsWithTime'

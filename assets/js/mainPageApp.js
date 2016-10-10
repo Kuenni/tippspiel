@@ -111,6 +111,16 @@ mainPageApp.controller('MainPageController', function($scope, $http, $log/*,flas
 				});
 	};
 
+	$scope.refresh = function(){
+		$http.get('/refresh',
+				{params : {	"matchday" : $scope.selectedMatchday.value,
+					"season" : $scope.selectedSeason
+				}}).success(function(data){
+					console.log(data);
+					$scope.bets = data;
+				});
+	};
+	
 	/*
 	 * Login 
 	 */

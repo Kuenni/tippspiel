@@ -1,12 +1,6 @@
 var mainPageApp = angular.module('mainPageApp', []);	// Defines an angular
 														// module
-<<<<<<< HEAD
-var sortingOrder = 'points'; //Default sorting order
-mainPageApp.controller('MainPageController', function($scope, $http, $log) {
-=======
-
 mainPageApp.controller('MainPageController', function($scope, $http, $log/*,flash*/) {
->>>>>>> ed12f06f6bbe53dd8970a90760cccd6aa0bec4d7
 	// $log is used for console log
 	// $http is used to communicate with the server
 	// $scope defines the scope of controller

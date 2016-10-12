@@ -52,7 +52,6 @@ mainPageApp.controller('MainPageController', function($scope, $http, $log/*,flas
 		default:
 			break;
 		}
-		console.log(points);
 		return points;
 	};
 	

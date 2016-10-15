@@ -11,10 +11,15 @@ module.exports = {
 			}, function(error, response, body) {
 				if (error) {
 					sails.log.error(error);
-					callback(error);
+					return callback(error);
 				}
 				else {
-					JSON.parse(body).forEach(function(match){
+					//DB may be unavailble and respond with Message
+					var response = JSON.parse(body);
+					if(response.hasOwnProperty("Message")){
+						return callback(body);
+					}
+					response.forEach(function(match){
 						if(bet.matchId == match.MatchID){
 							callback(0,match);
 						}

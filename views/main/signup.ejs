@@ -30,18 +30,18 @@
 			if (username && password) {
 				if (password === confirmPassword) {
 					$.post('/signup', {
-					username : username,
-					password : password
-				}).done(function(){
-					window.location = "/bets";
-				}).fail(function(res, textStatus, err) {
-					console.log("res: " + res);
-					console.log("status: " + textStatus);
-					console.log("err: " + err);
-				//	var responseJSON = $.parseJSON(res.responseText);
-				//	alert("Error: " + responseJSON.error);
-				alert('asdfasdfasdf');
-				});
+						username : username,
+						password : password
+					}).done(function() {
+						window.location = "/";
+					}).fail(function(res, textStatus, err) {
+						console.log("res: " + res);
+						console.log("status: " + textStatus);
+						console.log("err: " + err);
+						//	var responseJSON = $.parseJSON(res.responseText);
+						//	alert("Error: " + responseJSON.error);
+						alert(textStatus);
+					});
 				} else {
 					alert("Passwords don't match");
 				}

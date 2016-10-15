@@ -177,10 +177,14 @@ mainPageApp.controller('MainPageController', function($scope, $http, $log/*,flas
 	 * Call update for the listed bets
 	 */
 	$scope.storeUpdates = function(){
+		var betsLeft = $scope.bets.length;
 		$scope.bets.forEach(function(bet){
 			$http.post('/bet/' + bet.id,
 					bet ).success(function(data){
-						$scope.printSelectedMatchday();
+						betsLeft -= 1;
+						if(!betsLeft){
+							$scope.printSelectedMatchday();
+						}
 					});
 		});
 	};

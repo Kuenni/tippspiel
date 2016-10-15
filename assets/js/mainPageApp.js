@@ -104,6 +104,8 @@ mainPageApp.controller('MainPageController', function($scope, $http, $log/*,flas
 									"season" : $scope.selectedSeason
 						}}).success(function(data){
 							$scope.bets = data;
+						}).error(function(data){
+							alert("Datenbankfehler! OpenLigaDB möglicherweise unerreichbar.");
 						});
 					}
 				});
@@ -189,10 +191,11 @@ mainPageApp.controller('MainPageController', function($scope, $http, $log/*,flas
 		parseInt(item.nCorrect)*$scope.pointsCorrect;
 	}
 	
-	var getRanking = function() {
+	$scope.getRanking = function() {
 		$http({
 			method : "GET",
 			url : "/user",
+			params : {"season" : $scope.selectedSeason}
 		}).success(function(data) {
 			var result = data.userRankings;
 			$scope.users = data;
@@ -360,7 +363,7 @@ mainPageApp.controller('MainPageController', function($scope, $http, $log/*,flas
 	
 	//Call functions when page is done
 	isUserLoggedIn();
-	getRanking();
+	$scope.getRanking();
 	getTeamRanking();
 	$http.get('timeline').success(function(data){
 		timeline(data);

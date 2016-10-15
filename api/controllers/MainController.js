@@ -30,8 +30,9 @@ module.exports = {
 					});
 				} else if (usr.length) {
 					console.log("Username taken");
-					res.send(400, {
-						error : "Username already Taken"
+					res.statusCode = 400;
+					res.json({
+						error : "Nutzername schon vergeben"
 					});
 				} else {
 					var hasher = require("password-hash");
@@ -51,7 +52,7 @@ module.exports = {
 						} else {
 							req.session.user = user;
 							req.session.authenticated = true;
-							return res.redirect("/bets");
+							return res.redirect("/");
 						}
 					});
 				}
@@ -95,12 +96,12 @@ module.exports = {
 							console.log("wrong pw");
 							res.statusCode = 400;
 							res.json({
-								error : "Wrong Password"
+								error : "Nutzername oder Passwort falsch"
 							});
 						}
 					} else {
-						res.send(404, {
-							error : "User not Found"
+						res.send(400, {
+							error : "Nutzername oder Passwort falsch"
 						});
 					}
 				}

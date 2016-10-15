@@ -6,8 +6,10 @@ module.exports = {
 		 * Get a specific match for evaluation of results
 		 */
 		getRelevantResult : function(bet,callback){
+			var urlToCheck = "http://www.openligadb.de/api/getmatchdata/" 
+				+ bet.season.leagueShortcut + "/" + bet.season.leagueSeason + "/" + bet.matchday;
 			request.get({
-				url: "http://www.openligadb.de/api/getmatchdata/" + bet.season.leagueShortcut + "/" + bet.season.leagueSeason + "/" + bet.matchday
+				url: urlToCheck
 			}, function(error, response, body) {
 				if (error) {
 					sails.log.error(error);

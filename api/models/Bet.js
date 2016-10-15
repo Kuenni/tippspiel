@@ -90,11 +90,11 @@ module.exports = {
 					var deltaGoalsBet = localBet.betHome - localBet.betGuest;
 					//Correct bet
 					if(localBet.cachedGoalsHome == localBet.betHome && localBet.cachedGoalsGuest == localBet.betGuest){
-						localBet.cachedPoints = 3;
+						localBet.cachedPoints = 5;
 					}
 					//Correct difference
 					else if (deltaGoalsResult == deltaGoalsBet){
-						localBet.cachedPoints = 2;
+						localBet.cachedPoints = 3;
 					}
 					//Correct tendency
 					else if(sign(deltaGoalsResult) == sign(deltaGoalsBet)){

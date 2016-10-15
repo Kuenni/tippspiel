@@ -7,13 +7,17 @@
 
 module.exports = {
 		loadMatchday: function(req,res){
-			query = req.query;
+			var query = req.query;
 			Season.findOne({id:query.season}).exec(function(err,season){
 				if(err) return res.send(err,500);
 				LigaDbCaller.getMatches(season,query.matchday,function(error,matchdayData){
 					if(error) return res.send(500,error);
 					var bets = [];
 					matchdayData = JSON.parse(matchdayData);
+					//LigaDB may be unavailable but respond with message
+					if(matchdayData.hasOwnProperty("Message")){
+						return res.send(500,matchdayData);
+					}
 					var toProcess = matchdayData.length;
 					matchdayData.forEach(function(match){
 						Bet.create(
@@ -38,8 +42,9 @@ module.exports = {
 			});
 		},
 		index: function(req,res){
+			//TODO: check whether requested user id is the login id
 			if(req.query){
-				Bet.find(req.query).populate('season').exec(function(err,bets){
+				Bet.find(req.query).populateAll().exec(function(err,bets){
 					if(err) return res.send(500,err);
 					bets.forEach(function(bet){
 						bet.points = bet._points();

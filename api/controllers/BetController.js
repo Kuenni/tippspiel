@@ -140,15 +140,15 @@ module.exports = {
 						return a.matchday - b.matchday;
 					}).forEach(function(bet){
 						//Continue if the bet cannot be completely evaluated
-						if(+bet.betresultcode === -1){
+						if(+bet.cachedPoints === -1){
 							return;
 						}
 						if(userTimeline.timeline.length != 0 &&
 								userTimeline.timeline[userTimeline.timeline.length - 1].matchday === +bet.matchday){
-							userTimeline.timeline[userTimeline.timeline.length - 1].points += +bet.betresultcode;
+							userTimeline.timeline[userTimeline.timeline.length - 1].points += +bet.cachedPoints;
 						}
 						else{
-							userTimeline.timeline.push({matchday:+bet.matchday,points: +bet.betresultcode});
+							userTimeline.timeline.push({matchday:+bet.matchday,points: +bet.cachedPoints});
 						}
 					});
 					timelines.push(userTimeline);

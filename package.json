@@ -24,7 +24,10 @@
     "sails": "~0.11.0",
     "sails-disk": "^0.10.8",
     "request":"~2.75.0",
-    "lodash":"^4.0.0"	
+    "lodash":"^4.0.0",
+    "bootstrap":"*",
+    "angular-bootstrap":"*",
+    "bower":"~1.7.9"
   },
   "scripts": {
     "debug": "node debug app.js",

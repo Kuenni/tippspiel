@@ -58,6 +58,27 @@ module.exports = {
 			});
 			}
 		},
+		update: function(req,res){
+			var user = req.param("user");
+			if(user){
+				/*
+				 * Check whether user is the same as in the stored bet
+				 */
+				if(!user.id == req.session.user.id){
+					console.log('user not equal');
+					return res.send(400);
+				}
+				Bet.update({id:req.body.id},req.body).exec(function(err,bet){
+					if(err){console.log(err);}
+					/*
+					 * If update was successful we're done
+					 */
+					return res.send(200);
+				});
+			} else{
+				return res.send(400);
+			}
+		},
 		refresh: function(req,res){
 			if(req.query){
 				Bet.find(req.query).populate('season').exec(function(err,bets){

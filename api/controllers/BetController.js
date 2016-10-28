@@ -44,7 +44,7 @@ module.exports = {
 		index: function(req,res){
 			//TODO: check whether requested user id is the login id
 			if(req.query){
-				Bet.find(req.query).populateAll().exec(function(err,bets){
+				Bet.find(req.query).populate('season').exec(function(err,bets){
 					if(err) return res.send(500,err);
 					bets.forEach(function(bet){
 						bet.points = bet._points();

@@ -16,8 +16,14 @@ module.exports = {
 					return callback(error);
 				}
 				else {
-					//DB may be unavailble and respond with Message
-					var response = JSON.parse(body);
+					//DB may be unavailable and respond with Message
+				//	console.log(response);
+				//	console.log(body);
+					try {
+						var response = JSON.parse(body);
+					} catch (e) {
+						return callback({message:'JSON parse error in LigaDbCaller'});
+					}
 					if(response.hasOwnProperty("Message")){
 						return callback(body);
 					}
@@ -33,15 +39,19 @@ module.exports = {
 		 * Get matches for a given matchday and season
 		 */
 		getMatches : function(season, matchday, callback){
+			var url = "http://www.openligadb.de/api/getmatchdata/" + season.leagueShortcut + "/" + season.leagueSeason + "/" + matchday;
+			sails.log.info("Getting matches from url:");
+			sails.log.info(url);
 			request.get({
-				url: "http://www.openligadb.de/api/getmatchdata/" + season.leagueShortcut + "/" + season.leagueSeason + "/" + matchday
+				url: url,
+				header: {Accept:"application/json"}
 			}, function(error, response, body) {
 				if (error) {
 					sails.log.error(error);
 					callback(error)
 				}
 				else {
-					callback(0,body);
+					callback(0,JSON.parse(body));
 				}
 			});
 		},

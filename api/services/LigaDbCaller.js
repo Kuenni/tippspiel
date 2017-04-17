@@ -5,34 +5,34 @@ module.exports = {
 		/*
 		 * Get a specific match for evaluation of results
 		 */
-		getRelevantResult : function(bet,callback){
+		getMatchResult : function(match,callback){
 			var urlToCheck = "http://www.openligadb.de/api/getmatchdata/" 
-				+ bet.season.leagueShortcut + "/" + bet.season.leagueSeason + "/" + bet.matchday;
+				+ match.season.leagueShortcut + "/" + match.season.leagueSeason + "/" + match.matchday;
+			sails.log.info("LigaDbCaller - getResult: Call to external liga DB -> " + urlToCheck);
 			request.get({
 				url: urlToCheck
 			}, function(error, response, body) {
 				if (error) {
+					sails.log.error("LigaDbCaller - getResult: Error in get Request");
 					sails.log.error(error);
 					return callback(error);
 				}
-				else {
-					//DB may be unavailable and respond with Message
-				//	console.log(response);
-				//	console.log(body);
-					try {
-						var response = JSON.parse(body);
-					} catch (e) {
-						return callback({message:'JSON parse error in LigaDbCaller'});
-					}
-					if(response.hasOwnProperty("Message")){
-						return callback(body);
-					}
-					response.forEach(function(match){
-						if(bet.matchId == match.MatchID){
-							callback(0,match);
-						}
-					});
+				try {
+					var response = JSON.parse(body);
+				} catch (e) {
+					sails.log.error("LigaDbCaller - getResult: JSON parse error in LigaDbCaller");
+					return callback({message:'JSON parse error in LigaDbCaller'});
 				}
+				if(response.hasOwnProperty("Message")){
+					sails.log.error("LigaDbCaller - getResult: Response of Liga DB has unexpected format");
+					return callback(body);
+				}
+				response.forEach(function(matchResponse){
+					if(match.openDbMatchId == matchResponse.MatchID){
+						return callback(0,matchResponse);
+					}
+				});
+
 			});
 		},
 		/*

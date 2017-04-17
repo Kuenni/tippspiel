@@ -40,6 +40,7 @@ module.exports = {
 		 */
 		getMatches : function(season, matchday, callback){
 			var url = "http://www.openligadb.de/api/getmatchdata/" + season.leagueShortcut + "/" + season.leagueSeason + "/" + matchday;
+			sails.log.info("LigaDbCaller - getMatches: Call to external liga DB -> " + url);
 			sails.log.info("Getting matches from url:");
 			sails.log.info(url);
 			request.get({
@@ -59,8 +60,10 @@ module.exports = {
 		 * Get the current matchday for the given season
 		 */
 		getCurrentMatchday : function(season, callback){
+			var url = "http://www.openligadb.de/api/getcurrentgroup/" + season.leagueShortcut;
+			sails.log.info("LigaDbCaller - getCurrentMatchday: Call to external liga DB -> " + url);
 			request.get(
-				{url : "http://www.openligadb.de/api/getcurrentgroup/" + season.leagueShortcut}
+				{url : url}
 				, function(error, response, body){
 					if(error){
 						sails.log.error(error);
@@ -70,7 +73,11 @@ module.exports = {
 					}
 				});
 		},
-		
+		/*
+		 * For a given matchday and season search for matches in the match database
+		 * If there are no entries in the local DB yet, get the matches from the 
+		 * openLigaDB and store new entries locally
+		 */
 		getMatchesOfTheDay : function getMatchesOfDay(matchday, season,callback){
 			var matchday = matchday;
 			var sesason = season;
@@ -80,19 +87,19 @@ module.exports = {
 						if(err){
 							sails.log.error("Error finding matches for the match day");
 							sails.log.error(err);
-							return null;
+							return callback(err,null);
 						}
 						/*
 						 * No Matches found in match database
 						 */
 						if(matches.length == 0){
-							sails.log.debug("No matches in database yet");
+							sails.log.info("No matches in database yet");
 								// Get Match data from online DB
 								LigaDbCaller.getMatches(season, matchday, function(err, dbMatches){
 									if(err){
 										sails.log.error("Error getting matches from the Liga DB");
 										sails.log.error(err);
-										return null;
+										return callback(err,null);
 									}
 									var matchesToProcess = dbMatches.length;
 									var matchReturnList = [];
@@ -112,23 +119,19 @@ module.exports = {
 											if(err){
 												sails.log.error("Error on creating new match");
 												sails.log.error(err);
-												return null;
+												return callback(err,null);
 											}
 											matchesToProcess -= 1;
 											matchReturnList.push(createdMatch);
 											if(matchesToProcess == 0){
-												return matchReturnList;
+												return callback(err,matchReturnList);
 											}
 										});
 									});
 								});
 						}//if matches length == 0
-						/*
-						 * Matches already available in DB
-						 */
-						else{
-							// If there are already matches available, just send them
-							return matches;
+						else{// If there are already matches available, just send them
+							return callback(err,matches);
 						}
 					}
 			);

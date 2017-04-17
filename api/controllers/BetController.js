@@ -87,23 +87,45 @@ module.exports = {
 		},
 		update: function(req,res){
 			var user = req.param("user");
+			if(!req.session.user){
+				sails.log.info("BetController - update: user id " + user + " tried to update but did not have a session");
+				req.flash("message","Need to log in first!");
+				return res.redirect("/login");
+			}
 			if(user){
 				/*
 				 * Check whether user is the same as in the stored bet
 				 */
 				if(!user.id == req.session.user.id){
-					console.log('user not equal');
-					return res.send(400);
+					sails.log.info('User' + req.session.user.id
+							+ '(' + req.session.user.username + ') tried do update bet of user id ' + user.id);
+					return res.send(400,{message:"Users can only update their own bets!"});
 				}
-				Bet.update({id:req.body.id},req.body).exec(function(err,bet){
-					if(err){console.log(err);}
-					/*
-					 * If update was successful we're done
-					 */
-					return res.send(200);
+				
+				var updatedBet = req.body;
+				var updatedBet = Bet.update(
+						{id:updatedBet.id},
+						{betHome : updatedBet.betHome,
+						betGuest : updatedBet.betGuest
+					})
+				.then(function(bets){
+					async.map(bets,
+						function(bet,cb){
+							return cb(0,bet._points());
+						},
+						function(err,points){
+							return res.json(updatedBet);//TODO: Return only message with names of teams updated
+						});
+					return;
+				})
+				.catch(function(err){
+					sails.log.error("BetController - update: Error when updating bet");
+					sails.log.error(err);
+					return res.send(500,{message:"Error when updating bet"});
 				});
+				return;
 			} else{
-				return res.send(400);
+				return res.send(400,{message:"You have to log in for updating bets."});
 			}
 		},
 		refresh: function(req,res){

@@ -12,6 +12,38 @@ function sign(x){
 	return NaN;
 }
 
+function calculateBetPoints(bet, match){
+	if(match == 0){
+		//Something went wrong finding a match in DB
+		return -1;
+	}
+	var resultHome 	= match.goalsHome();
+	var resultGuest = match.goalsGuest();
+	var betHome 	= bet.betHome;
+	var betGuest 	= bet.betGuest;
+		
+	if (betHome == -1 || betGuest == -1 ||
+			resultHome == -1 || resultGuest == -1 ){
+		return -1;
+	}
+	var deltaGoalsResult = resultHome - resultGuest;
+	var deltaGoalsBet = betHome - betGuest;
+	//Correct bet
+	if(resultHome == betHome && resultGuest == betGuest){
+		return 5;
+	}
+	//Correct difference
+	else if (deltaGoalsResult == deltaGoalsBet){
+		return 3;
+	}
+	//Correct tendency
+	else if(sign(deltaGoalsResult) == sign(deltaGoalsBet)){
+		return 1;
+	}
+	return 0;
+}
+
+
 module.exports = {
 
 		attributes: {
@@ -25,14 +57,6 @@ module.exports = {
 				type: 'INT',
 				defaultsTo : -1
 			},
-			cachedGoalsHome: {
-				type: 'INT',
-				defaultsTo : -1
-			},
-			cachedGoalsGuest: {
-				type: 'INT',
-				defaultsTo : -1
-			},
 			betHome: {
 				type: 'INT',
 				defaultsTo: -1
@@ -41,69 +65,56 @@ module.exports = {
 				type : 'INT',
 				defaultsTo: -1
 			},
-			matchId: 'INT',
+			matchId: { 
+				type: 'INT',
+				required: true
+			},
 			user: {
-				model: 'user'
+				model: 'user',
+				required: true
 			},
 			season: {
-				model: 'season'
+				model: 'season',
+				required: true
+			},
+			match: {
+				model:'match',
+				required: true
 			},
 			/*
 			 * Return cached attribute
 			 */
-			_points: function(){
+			_points : function(){
 				if(this.isNeedsUpdate()){
-					this.updateCachedResults();
+					var localBet = this;
+						Match.findOne(this.match).populate('season').exec(function(err,match){
+						if(err){
+							sails.log.error("Bet.js - _points: Error finding match for bet point calculation BetID -> " + localBet.id);
+							sails.log.error(err);
+							return 0;
+						}	
+						localBet.cachedPoints = calculateBetPoints(localBet,match);
+						if(localBet.cachedPoints != -1){
+							localBet.save(function(err){
+								if(err){
+									sails.log.error("Bet.js - _points: Error saving cached points");
+									sails.log.error(err);
+								}
+								return null;
+							});
+						}
+						return localBet.cachedPoints > 0 ? localBet.cachedPoints : 0;
+					});
+				} else{
+					//Ensure no -1 values
+					return this.cachedPoints > 0 ? this.cachedPoints : 0;
 				}
-				//Ensure no -1 values
-				return this.cachedPoints > 0 ? this.cachedPoints : 0;
 			},
 			/*
 			 * Check whether update of the cached attributes is needed
 			 */
 			isNeedsUpdate: function() {
-				return this.cachedPoints == -1 || this.cachedGoalsHome == -1 || this.cachedGoalsGuest == -1;
-			},
-			/*
-			 * Update the cached attributes in this bet
-			 */
-			updateCachedResults : function(){
-				var localBet = this;
-				LigaDbCaller.getRelevantResult(localBet,function(err,game){
-					if(err) return -1;
-					var endResult;
-					game.MatchResults.forEach(function(result){
-						if(result.ResultOrderID == 2){
-							endResult = result;
-						}
-					});
-					if(!endResult){
-						return -1;
-					}
-					localBet.cachedGoalsHome = endResult.PointsTeam1;
-					localBet.cachedGoalsGuest = endResult.PointsTeam2;
-					if (localBet.cachedGoalsGuest == -1 || localBet.cachedGoalsHome == -1 ||
-							localBet.betGuest == -1 || localBet.betHome == -1 ){
-						return -1;
-					}
-					var deltaGoalsResult = localBet.cachedGoalsHome - localBet.cachedGoalsGuest;
-					var deltaGoalsBet = localBet.betHome - localBet.betGuest;
-					//Correct bet
-					if(localBet.cachedGoalsHome == localBet.betHome && localBet.cachedGoalsGuest == localBet.betGuest){
-						localBet.cachedPoints = 5;
-					}
-					//Correct difference
-					else if (deltaGoalsResult == deltaGoalsBet){
-						localBet.cachedPoints = 3;
-					}
-					//Correct tendency
-					else if(sign(deltaGoalsResult) == sign(deltaGoalsBet)){
-						localBet.cachedPoints = 1;
-					} else {
-						localBet.cachedPoints = 0;
-					}
-					localBet.save();
-				});
+				return this.cachedPoints == -1;
 			}
 		}
 };

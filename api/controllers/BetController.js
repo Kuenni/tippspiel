@@ -5,54 +5,81 @@
  * @help :: See http://sailsjs.org/#!/documentation/concepts/Controllers
  */
 
+async  = require('async')
+
+// closure function to make user id available in async call
+var createNewBet = function createAddUserId(userId){
+	return function createBet(match,callback){
+		Bet.create({
+			matchId		: match.openDbMatchId,
+			matchday	: match.matchday,
+			match		: match.id,
+			teamhome	: match.teamhome,
+			teamguest	: match.teamguest,
+			season		: match.season,
+			user		: userId
+		}).exec(function(err, createdBet){
+			if(err){
+				sails.log.error("BetController - createNewBet: Error creating new bet from match.");
+				sails.log.error(err);
+				return callback(err,createdBet);
+			}
+			return callback(null,createdBet);
+		});
+	}
+}
+
+
 module.exports = {
 		loadMatchday: function(req,res){
 			var query = req.query;
 			Season.findOne({id:query.season}).exec(function(err,season){
 				if(err) return res.send(err,500);
-				LigaDbCaller.getMatches(season,query.matchday,function(error,matchdayData){
-					if(error) return res.send(500,error);
-					var bets = [];
-					matchdayData = JSON.parse(matchdayData);
-					//LigaDB may be unavailable but respond with message
-					if(matchdayData.hasOwnProperty("Message")){
-						return res.send(500,matchdayData);
-					}
-					var toProcess = matchdayData.length;
-					matchdayData.forEach(function(match){
-						Bet.create(
-								{user:query.user,
-								matchday:query.matchday,
-								matchId:match.MatchID,
-								season:query.season,
-								teamhome: match.Team1.TeamName,
-								teamguest: match.Team2.TeamName,
-								logoTeam1: match.Team1.TeamIconUrl,
-								logoTeam2: match.Team2.TeamIconUrl
-							}).exec(function(err,createdBet){
-								if(err) return res.send(500,err);
-								toProcess -= 1;
-								bets.push(createdBet);
-								if(toProcess == 0){
-									res.json(bets);
-								}
-							});
-					});
-				});
 			});
 		},
+		
 		index: function(req,res){
 			//TODO: check whether requested user id is the login id
 			if(req.query){
-				Bet.find(req.query).populate('season').exec(function(err,bets){
+				Bet.find(req.query).populate(['season','match']).exec(function(err,bets){
 					if(err) return res.send(500,err);
-					bets.forEach(function(bet){
-						bet.points = bet._points();
-					});
-					return res.json(bets)
+					if(bets.length != 0){
+						return res.json(bets);
+					} else{
+						if(!req.query.season || !req.query.matchday){
+							return res.send(400,{message:"No bets in database for query but cannot create bets from given information"});
+						}
+						if(!req.session.user){
+							return res.send(400,{message:"Cannot create bets without login!"});
+						}
+						sails.log.debug("Going to call getMatchesOfTheDay");
+						Season.findOne({id:req.query.season})//Need good way of handling seasons not found
+						.then(function(season){
+							async.waterfall([
+								function(cb){// Very ugly solution. Is there a better way? asyncify?
+									LigaDbCaller.getMatchesOfTheDay(req.query.matchday,season,cb);
+								},
+								function createBets(matchList,callback){
+									var betList = [];
+									//Map every entry of match list to the create new bet function
+									async.map(matchList,createNewBet(req.session.user.id),function(err,betlist){
+										return callback(err,betlist);
+									});					
+								}
+							],function(err,result){
+								//result in waterfall is here the list of all
+								//return values from createNewBet mapping
+								res.json(result);
+							});
+						}).catch(function(error){
+							sails.log.error("BetController - index:");
+							sails.log.error(error)
+							return res.send(500,error);
+						});
+					}
 				});
 			} else{
-			Bet.find().populate('season').exec(function(err,bets){
+			Bet.find().populate(['season','match']).exec(function(err,bets){
 				if(err) return res.send(500,err);
 				return res.json(bets);
 			});

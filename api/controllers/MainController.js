@@ -24,9 +24,11 @@ module.exports = {
 			var password = req.param("password");
 			User.findByUsername(username).exec(function(err, usr) {
 				if (err) {
-					console.log("DB Error on signup");
+					sails.log.error("DB Error on signup");
+					sails.log.error(err)
 					res.send(500, {
-						error : "DB Error"
+						error : err,
+						message: "DB Error"
 					});
 				} else if (usr.length) {
 					console.log("Username taken");

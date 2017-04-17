@@ -1,4 +1,4 @@
-var mainPageApp = angular.module('mainPageApp', []);	// Defines an angular
+var mainPageApp = angular.module('mainPageApp', ['ngAnimate']);	// Defines an angular
 														// module
 mainPageApp.controller('MainPageController', function($scope, $http, $log/*,flash*/) {
 	// $log is used for console log
@@ -37,6 +37,7 @@ mainPageApp.controller('MainPageController', function($scope, $http, $log/*,flas
 	$scope.pointsDifference = 3;
 	$scope.pointsTrend = 1;
 	
+	//TODO: Handle this on server side to prevent manipulation
 	$scope.pointsForBet = function(betCode){
 		var points = 0
 		switch (parseInt(betCode)) {
@@ -108,17 +109,14 @@ mainPageApp.controller('MainPageController', function($scope, $http, $log/*,flas
 							alert("Datenbankfehler! OpenLigaDB möglicherweise unerreichbar.");
 						});
 					}
+				}).error(function(data){
+					console.log(data);
+					
 				});
 	};
 
 	$scope.refresh = function(){
-		$http.get('/refresh',
-				{params : {	"matchday" : $scope.selectedMatchday.value,
-					"season" : $scope.selectedSeason
-				}}).success(function(data){
-					console.log(data);
-					$scope.bets = data;
-				});
+		$scope.printSelectedMatchay();
 	};
 	
 	/*
@@ -204,7 +202,7 @@ mainPageApp.controller('MainPageController', function($scope, $http, $log/*,flas
 			var result = data.userRankings;
 			$scope.users = data;
 		}).error(function(data) {
-			alert("Fails");
+			alert("Get Ranking failed");
 		});
 	}
 	
@@ -368,9 +366,9 @@ mainPageApp.controller('MainPageController', function($scope, $http, $log/*,flas
 	//Call functions when page is done
 	isUserLoggedIn();
 	$scope.getRanking();
-	getTeamRanking();
-	$http.get('timeline').success(function(data){
-		timeline(data);
-	});
+	//getTeamRanking();
+	//$http.get('timeline').success(function(data){
+	//	timeline(data);
+	//});
 	getSeasons();
 });

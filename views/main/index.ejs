@@ -8,7 +8,7 @@
 				} else {	
 			%>
 		<div id="selectorsDiv" class="col-md-2 col-md-offset-5">
-			<span ng-show="loggedIn" id="seasonSelectDiv"> Saison:
+			<span id="seasonSelectDiv"> Saison:
 				<select ng-model="$parent.selectedSeason">
 					<option value="" disabled>---Bitte  w&auml;hlen---</option>
 					<option ng-repeat="season in seasons" value="{{season.id}}" ng-click="getCurrentMatchday()"> {{season.seasonName}} </option>

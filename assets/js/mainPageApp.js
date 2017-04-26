@@ -47,6 +47,7 @@ mainPageApp.controller('MainPageController', function($scope, $http, $log/*,flas
 							"season" : $scope.selectedSeason
 				}}).success(function(data){
 					$scope.bets = data;
+					//TODO: Check this. Should not happen anymore
 					if(data.length == 0){
 						$http.get('/loadMatchday',
 								{params : {	"matchday" : $scope.selectedMatchday.value,
@@ -96,6 +97,8 @@ mainPageApp.controller('MainPageController', function($scope, $http, $log/*,flas
 	/*
 	 * Get whether a user is logged in and store
 	 * user instance in scope
+	 * 
+	 * FIXME: This is stuff that should be handled on server side!
 	 */
 	var isUserLoggedIn = function(){
 		//Get the username for the logged-in user
@@ -121,7 +124,8 @@ mainPageApp.controller('MainPageController', function($scope, $http, $log/*,flas
 	}
 	
 	/*
-	 * Call update for the listed bets
+	 * Call update for the listed bets and reload data
+	 * when all bets are processed
 	 */
 	$scope.storeUpdates = function(){
 		var betsLeft = $scope.bets.length;

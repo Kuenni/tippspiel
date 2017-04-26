@@ -5,57 +5,6 @@ mainPageApp.controller('MainPageController', function($scope, $http, $log/*,flas
 	// $http is used to communicate with the server
 	// $scope defines the scope of controller
 	
-	/*
-	mainPageApp.factory("flash", function($rootScope) {
-		var queue = [];
-		var currentMessage = "asdf";
-
-		//$rootScope.$on("$routeChangeSuccess", function() {
-		currentMessage = queue.shift() || "";
-		//});
-
-		return {
-			setMessage: function(message) {
-				queue.push(message);
-			},
-			getMessage: function() {
-				return currentMessage;
-			}
-		};
-	});
-	*/
-
-	/*
-	mainPageApp.controller('FlashController',function($scope,flash){
-		$scope.data = flash.getMessage();
-	});
-	*/
-	
-	//$scope.flash = flash;
-	
-	$scope.pointsCorrect = 5;
-	$scope.pointsDifference = 3;
-	$scope.pointsTrend = 1;
-	
-	//TODO: Handle this on server side to prevent manipulation
-	$scope.pointsForBet = function(betCode){
-		var points = 0
-		switch (parseInt(betCode)) {
-		case 3:
-			points = 5;
-			break;
-		case 2:
-			points = 3;
-			break;
-		case 1:
-			points = 1;
-			break;
-		default:
-			break;
-		}
-		return points;
-	};
-	
 	$scope.selectedMatchday = {"name":"1. Spieltag","value":"1"};
 	
 	/*

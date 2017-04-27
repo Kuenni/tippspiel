@@ -1,0 +1,23 @@
+{
+  "name": "tippspiel",
+  "description": "a Sails application",
+  "main": "app.js",
+  "authors": [
+    "kuenni"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/Kuenni/tippspiel",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "^3.3.7",
+    "angular": "^1.6.4",
+    "angular-animate": "^1.6.4",
+    "angular-bootstrap": "^2.5.0"
+  }
+}

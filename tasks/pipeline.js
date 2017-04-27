@@ -15,6 +15,8 @@
 // (if you're using LESS with the built-in default config, you'll want
 //  to change `assets/styles/importer.less` instead.)
 var cssFilesToInject = [
+	'vendor/bootstrap/dist/css/bootstrap.css',
+	'vendor/bootstrap/dist/css/bootstrap-theme.css',
   'styles/**/*.css'
 ];
 
@@ -28,7 +30,18 @@ var jsFilesToInject = [
 
   // Dependencies like jQuery, or Angular are brought in here
   'js/dependencies/**/*.js',
-
+  
+  //Jquery, angular, ... from bower
+  // JQuery JS
+  'vendor/jquery/dist/jquery.min.js',
+  // Bootstrap JS
+  'vendor/bootstrap/dist/js/bootstrap.min.js',
+  // Angular JS
+  'vendor/angular/angular.js',
+  'vendor/angular-animate/angular-animate.min.js',
+  'vendor/angular-bootstrap/ui-bootstrap-tpls.min.js',
+  
+  
   // All of the rest of your client-side js files
   // will be injected here in no particular order.
   'js/**/*.js'

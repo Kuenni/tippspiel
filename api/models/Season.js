@@ -16,7 +16,6 @@ module.exports = {
 			},
 			leagueShortcut:{
 				type: 'STRING',
-				unique: true,
 				required: true,
 				minLength: 1
 			},
@@ -26,7 +25,6 @@ module.exports = {
 				required: true,
 				minLength: 1
 			},
-			//TODO: Do I need this for the one-to-one mapping of bet to season?
 			bet: {
 				collection: 'bet',
 				via : 'season'

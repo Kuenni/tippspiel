@@ -1,8 +1,8 @@
 {
   "dependencies": {
     "angular-bootstrap": "*",
-    "bootstrap": "*",
-    "bower": "*",
+    "bootstrap": "^3.3.7",
+    "bower": "^1.8.0",
     "ejs": "*",
     "grunt": ">0.4",
     "grunt-bower": ">0.21.3",
@@ -26,7 +26,7 @@
     "sails": ">=0.12.13",
     "sails-disk": ">0.10.8",
     "sails-generate-bower": ">=0.0.2",
-    "sails-mysql":">=0.11.5"
+    "sails-mysql": ">=0.11.5"
   },
   "name": "tippspiel",
   "private": true,

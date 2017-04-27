@@ -1,24 +1,23 @@
-<body>
 	<div class="container">
 		<h1>Neue Saison</h1>
 		<div>
-			<form class="form-inline" id="new-season-form" action="/season/create" method="POST">
+			<form class="form-inline" id="new-season-form">
 				<div class="form-group">
 					<label for="seasonName">Name</label>
-					<input type="text" name="seasonName" id="seasonName" placeholder="2016/2017" />
+					<input type="text" name="seasonName" id="seasonName" ng-model="season.seasonName" placeholder="2016/2017" />
 				</div>
 				<div class="form-group">
 					<label for="leagueShortcut">Liga Shortcut</label>
-					<input type="text" name="leagueShortcut" id="leagueShortcut" placeholder="bl1" />
+					<input type="text" name="leagueShortcut" id="leagueShortcut" ng-model="season.leagueShortcut" placeholder="bl1" />
 				</div>
 				<div class="form-group">
 					<label for="leagueSeason">Liga Saison</label>
-					<input type="text" name="leagueSeason" id="leagueSeason" placeholder="2016" />
+					<input type="text" name="leagueSeason" id="leagueSeason" ng-model="season.leagueSeason" placeholder="2016" />
 				</div>
-				<button type="submit" class="btn btn-primary" id="submitButtonn">
+				<button type="submit" class="btn btn-success" id="submitButtonn" ng-click="submitForm()">
 					Erstellen
 				</button>
+				<button type="button" class="btn btn-warning" ng-click="cancel()">Abbrechen</button>
 			</form>
 		</div>
 	</div>
-</body>

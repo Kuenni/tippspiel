@@ -1,6 +1,6 @@
-var mainPageApp = angular.module('mainPageApp', ['ngAnimate']);	// Defines an angular
+var mainPageApp = angular.module('mainPageApp', ['ngAnimate','ui.bootstrap']);	// Defines an angular
 														// module
-mainPageApp.controller('MainPageController', function($scope, $http, $log/*,flash*/) {
+mainPageApp.controller('MainPageController', function($scope, $http, $log, $uibModal/*,flash*/) {
 	// $log is used for console log
 	// $http is used to communicate with the server
 	// $scope defines the scope of controller
@@ -34,8 +34,14 @@ mainPageApp.controller('MainPageController', function($scope, $http, $log/*,flas
 	 * Add a new season to database
 	 */
 	$scope.addSeason = function(){
+		$log.info("Add Season");
 		$scope.isSeasonSelected = false;
 
+		$uibModal.open({
+			templateUrl: 'season/new', //Get the page from the controller (no layout.ejs)
+			controller: 'SeasonModalController',
+			size: 'lg' //Large Modal
+		});
 		return true;
 	}
 	

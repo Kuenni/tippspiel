@@ -39,6 +39,7 @@ module.exports = {
 		 * Get matches for a given matchday and season
 		 */
 		getMatches : function(season, matchday, callback){
+			//TODO: Catch undefined values
 			var url = "http://www.openligadb.de/api/getmatchdata/" + season.leagueShortcut + "/" + season.leagueSeason + "/" + matchday;
 			sails.log.info("LigaDbCaller - getMatches: Call to external liga DB -> " + url);
 			sails.log.info("Getting matches from url:");
@@ -60,6 +61,7 @@ module.exports = {
 		 * Get the current matchday for the given season
 		 */
 		getCurrentMatchday : function(season, callback){
+			//TODO: Catch undefined season
 			var url = "http://www.openligadb.de/api/getcurrentgroup/" + season.leagueShortcut;
 			sails.log.info("LigaDbCaller - getCurrentMatchday: Call to external liga DB -> " + url);
 			request.get(

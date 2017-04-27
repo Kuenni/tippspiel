@@ -14,14 +14,14 @@
 					<option ng-repeat="season in seasons" value="{{season.id}}" ng-click="getCurrentMatchday()"> {{season.seasonName}} </option>
 					<option ng-click="addSeason()" value=""> Saison hinzuf&uuml;gen...</option>
 				</select> </span>
-			<span id="matchdaySelectDiv" ng-show="selectedSeason"> Spieltag:
+			<span id="matchdaySelectDiv" ng-show="isSeasonSelected"> Spieltag:
 				<select ng-options="day.name for day in matchdays" ng-model="selectedMatchday"
 				ng-change="printSelectedMatchday()" >
 					<option disabled value="">---Bitte  w&auml;hlen---</option>
 				</select> </span>
 		</div>
 		<div class="col-md-10 col-md-offset-1 panel-group" id="accordion" role="tablist"
-		aria-multiselectable="true" ng-show="selectedSeason">
+		aria-multiselectable="true" ng-show="isSeasonSelected">
 			<div class="panel panel-default">
 				<div class="panel-heading" role="tab" id="headingBets">
 					<h4 class="panel-title"><a role="button"

@@ -5,6 +5,7 @@ mainPageApp.controller('MainPageController', function($scope, $http, $log/*,flas
 	// $http is used to communicate with the server
 	// $scope defines the scope of controller
 	
+	$scope.isSeasonSelected = false;
 	$scope.selectedMatchday = {"name":"1. Spieltag","value":"1"};
 	
 	/*
@@ -24,8 +25,8 @@ mainPageApp.controller('MainPageController', function($scope, $http, $log/*,flas
 	 */
 	getSeasons = function(){
 		//Get the seasons
-		$http.get('/season').success(function(data){
-			$scope.seasons = data;
+		$http.get('/season').then(function(response){
+			$scope.seasons = response.data;
 		});
 	}
 	
@@ -33,7 +34,9 @@ mainPageApp.controller('MainPageController', function($scope, $http, $log/*,flas
 	 * Add a new season to database
 	 */
 	$scope.addSeason = function(){
-		window.location.href = "/season/new";
+		$scope.isSeasonSelected = false;
+
+		return true;
 	}
 	
 	/*
@@ -45,10 +48,10 @@ mainPageApp.controller('MainPageController', function($scope, $http, $log/*,flas
 				{params : {	"matchday" : $scope.selectedMatchday.value,
 							"user" : $scope.user.id,
 							"season" : $scope.selectedSeason
-				}}).success(function(data){
-					$scope.bets = data;
+				}}).then(function success(response){
+					$scope.bets = response.data;
 					//TODO: Check this. Should not happen anymore
-					if(data.length == 0){
+					if(response.data.length == 0){
 						$http.get('/loadMatchday',
 								{params : {	"matchday" : $scope.selectedMatchday.value,
 									"user" : $scope.user.id,
@@ -59,7 +62,7 @@ mainPageApp.controller('MainPageController', function($scope, $http, $log/*,flas
 							alert("Datenbankfehler! OpenLigaDB möglicherweise unerreichbar.");
 						});
 					}
-				}).error(function(data){
+				}, function error(data){
 					console.log(data);
 					
 				});
@@ -102,24 +105,32 @@ mainPageApp.controller('MainPageController', function($scope, $http, $log/*,flas
 	 */
 	var isUserLoggedIn = function(){
 		//Get the username for the logged-in user
-		$http.get('/currentUser').success(function(data){
-			if(data.user){
+		$http.get('/currentUser').then(function(response){
+			if(response.data.user){
 				$scope.$parent.loggedIn = true;
-				$scope.user = data.user;
+				$scope.user = response.data.user;
 			}
+			return;
 		});
 	}
 	
 	/*
 	 * Call to server to find the current matchday
 	 */
-	$scope.getCurrentMatchday = function(){
+	$scope.seasonHasChanged = function(){
+		if(!$scope.selectedSeason){
+			return;
+		} else if($scope.selectedSeason == -1){
+			return $scope.addSeason()
+		}
+		$scope.isSeasonSelected = true;
 		$http.get('/currentMatchday',
 				{params:{'season':$scope.selectedSeason}}
-		).success(function(data){
-			$scope.selectedMatchday = $scope.matchdays[data.currentMatchday-1];
+		).then(function(response){
+			$scope.selectedMatchday = $scope.matchdays[response.data.currentMatchday-1];
 			//Handle error
 			$scope.printSelectedMatchday();
+			return;
 		})
 	}
 	
@@ -147,14 +158,12 @@ mainPageApp.controller('MainPageController', function($scope, $http, $log/*,flas
 	}
 	
 	$scope.getRanking = function() {
-		$http({
-			method : "GET",
-			url : "/user",
-			params : {"season" : $scope.selectedSeason}
-		}).success(function(data) {
+		$http.get("/user",
+			{params : {"season" : $scope.selectedSeason}})
+		.then(function success(data) {
 			var result = data.userRankings;
 			$scope.users = data;
-		}).error(function(data) {
+		},function error(data) {
 			alert("Get Ranking failed");
 		});
 	}
@@ -318,7 +327,7 @@ mainPageApp.controller('MainPageController', function($scope, $http, $log/*,flas
 	
 	//Call functions when page is done
 	isUserLoggedIn();
-	$scope.getRanking();
+	//$scope.getRanking();
 	//getTeamRanking();
 	//$http.get('timeline').success(function(data){
 	//	timeline(data);

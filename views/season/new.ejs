@@ -1,23 +1,32 @@
-	<div class="container">
-		<h1>Neue Saison</h1>
-		<div>
-			<form class="form-inline" id="new-season-form">
-				<div class="form-group">
-					<label for="seasonName">Name</label>
-					<input type="text" name="seasonName" id="seasonName" ng-model="season.seasonName" placeholder="2016/2017" />
-				</div>
-				<div class="form-group">
-					<label for="leagueShortcut">Liga Shortcut</label>
-					<input type="text" name="leagueShortcut" id="leagueShortcut" ng-model="season.leagueShortcut" placeholder="bl1" />
-				</div>
-				<div class="form-group">
-					<label for="leagueSeason">Liga Saison</label>
-					<input type="text" name="leagueSeason" id="leagueSeason" ng-model="season.leagueSeason" placeholder="2016" />
-				</div>
-				<button type="submit" class="btn btn-success" id="submitButtonn" ng-click="submitForm()">
-					Erstellen
-				</button>
-				<button type="button" class="btn btn-warning" ng-click="cancel()">Abbrechen</button>
-			</form>
+
+<div class="modal-header">
+	<h1>Neue Saison erstellen...</h1>
+</div>
+<div class="modal-body">
+	<form class="form-horizontal" id="new-season-form">
+		<div class="form-group form-inline">
+			<label class="control-label col-md-2 col-md-offset-3" for="seasonName">Name</label> 
+			<input type="text" class="form-control col-md-2"
+				name="seasonName" id="seasonName" ng-model="season.seasonName"
+				placeholder="2016/2017" />
 		</div>
-	</div>
+		<div class="form-group form-inline">
+			<label class="control-label col-md-3 col-md-offset-2" for="leagueShortcut">Liga Shortcut</label>
+			<input type="text" class="form-control col-md-5"
+				name="leagueShortcut" id="leagueShortcut"
+				ng-model="season.leagueShortcut" placeholder="bl1" />
+		</div>
+		<div class="form-group form-inline">
+			<label class="control-label col-md-3 col-md-offset-2" for="leagueSeason">Liga Saison</label>
+			<input type="text" class="form-control col-md-2"
+				name="leagueSeason" id="leagueSeason" ng-model="season.leagueSeason"
+				placeholder="2016" />
+		</div>
+
+	</form>
+</div>
+<div class="modal-footer">
+	<button type="submit" class="btn btn-success" id="submitButtonn"
+		ng-click="submitForm()">Erstellen</button>
+	<button type="button" class="btn btn-warning" ng-click="cancel()">Abbrechen</button>
+</div>

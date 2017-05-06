@@ -40,7 +40,7 @@ mainPageApp.controller('MainPageController', function($scope, $http, $log, $uibM
 		$uibModal.open({
 			templateUrl: 'season/new', //Get the page from the controller (no layout.ejs)
 			controller: 'SeasonModalController',
-			size: 'lg' //Large Modal
+			size: 'md' //Medium size Modal
 		});
 		return true;
 	}

@@ -148,11 +148,15 @@ mainPageApp.controller('MainPageController', function($scope, $http, $log, $uibM
 		var betsLeft = $scope.bets.length;
 		$scope.bets.forEach(function(bet){
 			$http.post('/bet/' + bet.id,
-					bet ).success(function(data){
+					bet ).then(function(data){
 						betsLeft -= 1;
 						if(!betsLeft){
 							$scope.printSelectedMatchday();
 						}
+					},
+					function error(err){
+						$log.error("storeUpdates");
+						$log.error(err);
 					});
 		});
 	};
@@ -163,8 +167,8 @@ mainPageApp.controller('MainPageController', function($scope, $http, $log, $uibM
 		parseInt(item.nCorrect)*$scope.pointsCorrect;
 	}
 	
-	$scope.getRanking = function() {
-		$http.get("/user",
+	var getRanking = function() {
+		$http.get("/user/ranking",
 			{params : {"season" : $scope.selectedSeason}})
 		.then(function success(data) {
 			var result = data.userRankings;
@@ -333,7 +337,7 @@ mainPageApp.controller('MainPageController', function($scope, $http, $log, $uibM
 	
 	//Call functions when page is done
 	isUserLoggedIn();
-	//$scope.getRanking();
+	getRanking();
 	//getTeamRanking();
 	//$http.get('timeline').success(function(data){
 	//	timeline(data);

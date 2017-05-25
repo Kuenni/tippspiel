@@ -96,9 +96,9 @@ module.exports = {
 				/*
 				 * Check whether user is the same as in the stored bet
 				 */
-				if(!user.id == req.session.user.id){
+				if(!user == req.session.user.id){
 					sails.log.info('User' + req.session.user.id
-							+ '(' + req.session.user.username + ') tried do update bet of user id ' + user.id);
+							+ '(' + req.session.user.username + ') tried do update bet of user id ' + user);
 					return res.send(400,{message:"Users can only update their own bets!"});
 				}
 				

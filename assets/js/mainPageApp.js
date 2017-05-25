@@ -140,13 +140,19 @@ mainPageApp.controller('MainPageController', function($scope, $http, $log, $uibM
 		})
 	}
 	
+	var betNonEmpty = function(bet){
+		return bet.betHome != -1 && bet.betGuest != -1;
+	}
+	
 	/*
 	 * Call update for the listed bets and reload data
 	 * when all bets are processed
 	 */
 	$scope.storeUpdates = function(){
-		var betsLeft = $scope.bets.length;
-		$scope.bets.forEach(function(bet){
+		var betsToUpdate = $scope.bets.filter(betNonEmpty);
+		var betsLeft = betsToUpdate;
+		betsToUpdate.forEach(function(bet){
+			if(bet.betHome)
 			$http.post('/bet/' + bet.id,
 					bet ).then(function(data){
 						betsLeft -= 1;

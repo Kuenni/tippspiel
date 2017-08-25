@@ -5,6 +5,11 @@
  * @help        :: See http://sailsjs.org/#!/documentation/concepts/Controllers
  */
 
+/**
+ * Helper function which is used for mapping with async.
+ * Each user is mapped onto this function to calculate the
+ * points over the season.
+ */
 var addPointsForUser = function(season){
 	return function(user,callback){
 		var pointCounterObject 

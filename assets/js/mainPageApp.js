@@ -130,6 +130,7 @@ mainPageApp.controller('MainPageController', function($scope, $http, $log, $uibM
 			return $scope.addSeason()
 		}
 		$scope.isSeasonSelected = true;
+		getRanking();
 		$http.get('/currentMatchday',
 				{params:{'season':$scope.selectedSeason}}
 		).then(function(response){
@@ -343,7 +344,6 @@ mainPageApp.controller('MainPageController', function($scope, $http, $log, $uibM
 	
 	//Call functions when page is done
 	isUserLoggedIn();
-	getRanking();
 	//getTeamRanking();
 	//$http.get('timeline').success(function(data){
 	//	timeline(data);

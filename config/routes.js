@@ -38,5 +38,9 @@ module.exports.routes = {
 		'/timeline' : {
 			controller : 'bet',
 			action : 'pointsWithTime'
+		},
+		'/user/ranking' : {
+			controller : 'user',
+			action : 'ranking'
 		}
 };

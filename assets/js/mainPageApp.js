@@ -177,11 +177,10 @@ mainPageApp.controller('MainPageController', function($scope, $http, $log, $uibM
 	var getRanking = function() {
 		$http.get("/user/ranking",
 			{params : {"season" : $scope.selectedSeason}})
-		.then(function success(data) {
-			var result = data.userRankings;
-			$scope.users = data;
-		},function error(data) {
-			alert("Get Ranking failed");
+		.then(function success(response) {
+			$scope.users = response.data;
+		},function error(response) {
+			alert("Get Ranking failed: " + response.data.message);
 		});
 	}
 	

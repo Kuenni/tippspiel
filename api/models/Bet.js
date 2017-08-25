@@ -26,8 +26,10 @@ function calculateBetPoints(bet, match){
 			resultHome == -1 || resultGuest == -1 ){
 		return -1;
 	}
+	
 	var deltaGoalsResult = resultHome - resultGuest;
 	var deltaGoalsBet = betHome - betGuest;
+
 	//Correct bet
 	if(resultHome == betHome && resultGuest == betGuest){
 		return 5;

@@ -196,36 +196,51 @@ module.exports = {
 			res.view();
 		},
 		pointsWithTime : function(req,res){
+			if(req.query.season){
 			User.find().populate('bets').exec(function(err, users){
 				if(err){
 					console.log('Error getting users for points timeline');
 				}
-				var usersLeft = users.length;
-				var timelines = []
-				users.forEach(function(user){
-					usersLeft -= 1;
+				// Map all users to finding bets for the season
+				async.map(users,function(user,callback){
 					var userTimeline = {user:user.username,timeline:[]};
-					//Unary "+" means cast value to int
-					user.bets.sort(function(a,b){
-						return a.matchday - b.matchday;
-					}).forEach(function(bet){
-						//Continue if the bet cannot be completely evaluated
-						if(+bet.cachedPoints === -1){
-							return;
-						}
-						if(userTimeline.timeline.length != 0 &&
-								userTimeline.timeline[userTimeline.timeline.length - 1].matchday === +bet.matchday){
-							userTimeline.timeline[userTimeline.timeline.length - 1].points += +bet.cachedPoints;
-						}
-						else{
-							userTimeline.timeline.push({matchday:+bet.matchday,points: +bet.cachedPoints});
-						}
+					sails.log.debug("Getting bet timeline for user: " + user.username);
+					Bet.find({user:user.id,season:req.query.season})
+					.then(function(bets){
+						bets.sort(function(a,b){
+							return a.matchday - b.matchday;
+						}).forEach(function(bet){
+							// Continue if the bet cannot be completely
+							// evaluated
+							if(+bet.cachedPoints === -1){
+								return;
+							}
+							if(userTimeline.timeline.length != 0 &&
+									userTimeline.timeline[userTimeline.timeline.length - 1].matchday === +bet.matchday){
+								userTimeline.timeline[userTimeline.timeline.length - 1].points += +bet.cachedPoints;
+							}
+							else{
+								userTimeline.timeline.push({matchday:+bet.matchday,points: +bet.cachedPoints});
+							}
+						});
+						callback(0,userTimeline);
+					})
+					.catch(function(err){
+							res.send(500,{'message':"Error when getting bets for timeline."})
 					});
-					timelines.push(userTimeline);
-					if(usersLeft == 0){
-						res.send(200,timelines);
+				},function(err,timelines){
+					if(err){
+						sails.log.error("BetController - timeline: Error in mapping users and bets");
+						sails.log.error(err);
+						return res.send(500,err);
 					}
-				});
-			});
+					res.json(timelines);
+				});	
+			}); // User.find()
+			
+			}			
+			else{
+				return res.send(400,{message:"Need a season to create the timeline for!"});
+			}
 		}
 };

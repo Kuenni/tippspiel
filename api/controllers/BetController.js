@@ -52,7 +52,6 @@ module.exports = {
 						if(!req.session.user){
 							return res.send(400,{message:"Cannot create bets without login!"});
 						}
-						sails.log.debug("Going to call getMatchesOfTheDay");
 						Season.findOne({id:req.query.season})//Need good way of handling seasons not found
 						.then(function(season){
 							async.waterfall([
@@ -204,7 +203,6 @@ module.exports = {
 				// Map all users to finding bets for the season
 				async.map(users,function(user,callback){
 					var userTimeline = {user:user.username,timeline:[]};
-					sails.log.debug("Getting bet timeline for user: " + user.username);
 					Bet.find({user:user.id,season:req.query.season})
 					.then(function(bets){
 						bets.sort(function(a,b){

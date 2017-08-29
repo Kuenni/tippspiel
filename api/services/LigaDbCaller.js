@@ -8,7 +8,6 @@ module.exports = {
 		getMatchResult : function(match,callback){
 			var urlToCheck = "http://www.openligadb.de/api/getmatchdata/" 
 				+ match.season.leagueShortcut + "/" + match.season.leagueSeason + "/" + match.matchday;
-			sails.log.info("LigaDbCaller - getResult: Call to external liga DB -> " + urlToCheck);
 			request.get({
 				url: urlToCheck
 			}, function(error, response, body) {
@@ -41,9 +40,6 @@ module.exports = {
 		getMatches : function(season, matchday, callback){
 			//TODO: Catch undefined values
 			var url = "http://www.openligadb.de/api/getmatchdata/" + season.leagueShortcut + "/" + season.leagueSeason + "/" + matchday;
-			sails.log.info("LigaDbCaller - getMatches: Call to external liga DB -> " + url);
-			sails.log.info("Getting matches from url:");
-			sails.log.info(url);
 			request.get({
 				url: url,
 				header: {Accept:"application/json"}
@@ -63,7 +59,6 @@ module.exports = {
 		getCurrentMatchday : function(season, callback){
 			//TODO: Catch undefined season
 			var url = "http://www.openligadb.de/api/getcurrentgroup/" + season.leagueShortcut;
-			sails.log.info("LigaDbCaller - getCurrentMatchday: Call to external liga DB -> " + url);
 			request.get(
 				{url : url}
 				, function(error, response, body){
@@ -83,7 +78,6 @@ module.exports = {
 		getMatchesOfTheDay : function getMatchesOfDay(matchday, season,callback){
 			var matchday = matchday;
 			var sesason = season;
-			sails.log.info("Getting matches of the day");
 			Match.find({matchday:matchday,season:season.id}).populateAll().exec(
 					function(err,matches){
 						if(err){

@@ -1,5 +1,5 @@
-<body>
-	<div class="container">
+<body ng-app="signupApp">
+	<div class="container" ng-controller="SignupController">
 		<h1>Tippspiel Anmeldung</h1>
 		<div>
 			<h3><span class="label label-default"> Signup </span></h3>
@@ -16,39 +16,12 @@
 					<label for="signupConfirmPassword">Repeat Password</label>
 					<input type="password" id="signupConfirmPassword" placeholder="confirm password" />
 				</div>
-				<button type="submit" class="btn btn-primary" id="signupButton">
+				<button type="submit" class="btn btn-primary" id="signupButton" ng-click="signup()">
 					Signup
 				</button>
 			</form>
 		</div>
 	</div>
 	<script>
-		$("#signupButton").click(function() {
-			var username = $("#signupName").val();
-			var password = $("#signupPassword").val();
-			var confirmPassword = $("#signupConfirmPassword").val();
-			if (username && password) {
-				if (password === confirmPassword) {
-					$.post('/signup', {
-						username : username,
-						password : password
-					}).done(function() {
-						window.location = "/";
-					}).fail(function(res, textStatus, err) {
-						console.log("res: " + res);
-						console.log("status: " + textStatus);
-						console.log("err: " + err);
-						//	var responseJSON = $.parseJSON(res.responseText);
-						//	alert("Error: " + responseJSON.error);
-						alert(textStatus);
-					});
-				} else {
-					alert("Passwords don't match");
-				}
-			} else {
-				alert("A username and password is required");
-			}
-			return false;
-		});
 	</script>
 </body>

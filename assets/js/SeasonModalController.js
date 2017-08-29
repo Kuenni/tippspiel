@@ -6,13 +6,9 @@ app.controller("SeasonModalController", function($uibModalInstance, $scope, $htt
   };
   
   $scope.submitForm = function(){
-	  console.log("Das ist ein Test");
-	  console.log($scope.season)
 	  $http.post('/season/create',
 				$scope.season )
 				.then(function(data){
-					console.log("then")
-					console.log(data);
 					window.location.href = "/";
 				},
 				function error(response){

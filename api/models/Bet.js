@@ -21,9 +21,9 @@ function calculateBetPoints(bet, match){
 	var resultGuest = match.goalsGuest();
 	var betHome 	= bet.betHome;
 	var betGuest 	= bet.betGuest;
-		
+
 	if (betHome == -1 || betGuest == -1 ||
-			resultHome == -1 || resultGuest == -1 ){
+			resultHome == -1 || resultGuest == -1 || resultGuest == undefined || resultHome == undefined){
 		return -1;
 	}
 	

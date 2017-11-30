@@ -55,7 +55,7 @@
 									<th></th>
 									<th class="text-center col-sm-2">Anpfiff</th>
 								</thead>
-								<tr ng-repeat="bet in bets" data-ng-class="{success: bet.cachedPoints==5, 
+								<tr ng-repeat="bet in bets" data-ng-class="{success: bet.cachedPoints==5, info: bet.cachedPoints==3 || bet.cachedPoints==1,
 								warning: bet.betHome == -1 || bet.betGuest == -1 || bet.betHome == undefined || bet.betGuest == undefined}">
 									<td class="text-center">
 										<!-- <img src={{bet.logoTeamHome}}> -->

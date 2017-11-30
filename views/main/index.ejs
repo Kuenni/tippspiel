@@ -7,17 +7,18 @@
 			<%
 				} else {	
 			%>
-		<div id="selectorsDiv" class="col-md-2 col-md-offset-5">
-			<span id="seasonSelectDiv"> Saison:
+		<div id="selectorsDiv" class="col-md-3 col-md-offset-5">
+			<div id="seasonSelectDiv"> Saison:
 				<select ng-model="selectedSeason" ng-change="seasonHasChanged()" 
 					ng-options="option.id as option.seasonName for option in seasons">
 				</select>
-			</span>
-			<span id="matchdaySelectDiv" ng-show="isSeasonSelected"> Spieltag:
+			</div>
+			<div id="matchdaySelectDiv" ng-show="isSeasonSelected"> Spieltag:
 				<select ng-options="day.name for day in matchdays" ng-model="selectedMatchday"
 				ng-change="printSelectedMatchday()" >
 					<option disabled value="">---Bitte  w&auml;hlen---</option>
-				</select> </span>
+				</select>
+			</div>
 		</div>
 		<div class="col-md-10 col-md-offset-1 panel-group" id="accordion" role="tablist"
 		aria-multiselectable="true" ng-show="isSeasonSelected">

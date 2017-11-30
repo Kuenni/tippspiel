@@ -251,6 +251,8 @@ mainPageApp.controller('MainPageController', function($scope, $http, $log, $uibM
 		var xExtents = [0,xMax];
 		var yExtents = [0,41];
 
+		d3.select('g').remove();
+		
 		var svg = d3.select("#timeline")
 		.attr("width", width + margin.left + margin.right)
 		.attr("height", height + margin.top + margin.bottom)

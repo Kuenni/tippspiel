@@ -132,6 +132,15 @@ mainPageApp.controller('MainPageController', function($scope, $http, $log, $uibM
 	}
 	
 	/*
+	 * Wrapper function for easier calling of timeline updates
+	 */
+	var getTimeline = function(){
+		$http.get('timeline',{params:{'season':$scope.selectedSeason}}).then(function(response){
+			timeline(response.data);
+		});
+	}
+	
+	/*
 	 * Call to server to find the current matchday
 	 */
 	$scope.seasonHasChanged = function(){
@@ -142,9 +151,7 @@ mainPageApp.controller('MainPageController', function($scope, $http, $log, $uibM
 		}
 		$scope.isSeasonSelected = true;
 		getRanking();
-		$http.get('timeline',{params:{'season':$scope.selectedSeason}}).then(function(response){
-			timeline(response.data);
-		});
+		getTimeline();
 		$http.get('/currentMatchday',
 				{params:{'season':$scope.selectedSeason}}
 		).then(function(response){
@@ -173,6 +180,7 @@ mainPageApp.controller('MainPageController', function($scope, $http, $log, $uibM
 						betsLeft -= 1;
 						if(!betsLeft){
 							$scope.printSelectedMatchday();
+							getTimeline();
 						}
 					},
 					function error(err){
@@ -289,6 +297,11 @@ mainPageApp.controller('MainPageController', function($scope, $http, $log, $uibM
 		.style("text-anchor", "end")
 		.text("Punkte");
 
+		var tooltip = d3.select('body')
+		.append('div')
+		.attr('class','tooltip')
+		.style("opacity",0);
+		
 		svg.selectAll('.dotContainer').data(data).enter()
 		.append('g')
 		.attr('class',function(d){return d.user})
@@ -305,7 +318,21 @@ mainPageApp.controller('MainPageController', function($scope, $http, $log, $uibM
 		.attr("r", 3.5)
 		.attr("cx", function(d) { return x(d.matchday); })
 		.attr("cy", function(d) { return y(d.points); })
-		.style("fill", function(d) { return z(d.user); });
+		.style("fill", function(d) { return z(d.user); })
+		.on("mouseover", function(d) {		
+			tooltip.transition()		
+                .duration(200)		
+                .style("opacity", .9);		
+			tooltip.html(d.user + " Spieltag: " + d.matchday + " Punkte: " + d.points)	
+                .style("left", (d3.event.pageX) + "px")		
+                .style("top", (d3.event.pageY - 28) + "px")
+				.style("background",z(d.user));
+            })					
+        .on("mouseout", function(d) {		
+        	tooltip.transition()		
+                .duration(500)		
+                .style("opacity", 0);	
+        });
 
 		legend = svg.append("g")
 		.attr("class","legend")

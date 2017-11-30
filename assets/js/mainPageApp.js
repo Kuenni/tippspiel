@@ -26,7 +26,20 @@ mainPageApp.controller('MainPageController', function($scope, $http, $log, $uibM
 	getSeasons = function(){
 		//Get the seasons
 		$http.get('/season').then(function(response){
-			$scope.seasons = response.data;
+			//Store the index of the latest season
+			var storedSeasonsArray = response.data;
+			//sort by season name
+			storedSeasonsArray = storedSeasonsArray.sort(function(a,b){
+					return a.seasonName > b.seasonName ? 1 : -1;
+				});
+			var lastSeasonIndex = storedSeasonsArray[storedSeasonsArray.length - 1].id;
+			
+			var arr = [{id:-1,seasonName:"Add Season"}];
+			
+			//Merge default value and season data
+			$scope.seasons = arr.concat(storedSeasonsArray);
+			$scope.selectedSeason = lastSeasonIndex;
+			$scope.seasonHasChanged();
 		});
 	}
 	
@@ -34,9 +47,7 @@ mainPageApp.controller('MainPageController', function($scope, $http, $log, $uibM
 	 * Add a new season to database
 	 */
 	$scope.addSeason = function(){
-		$log.info("Add Season");
 		$scope.isSeasonSelected = false;
-
 		$uibModal.open({
 			templateUrl: 'season/new', //Get the page from the controller (no layout.ejs)
 			controller: 'SeasonModalController',

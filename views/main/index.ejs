@@ -9,11 +9,10 @@
 			%>
 		<div id="selectorsDiv" class="col-md-2 col-md-offset-5">
 			<span id="seasonSelectDiv"> Saison:
-				<select ng-model="selectedSeason" ng-change="seasonHasChanged()">
-					<option value="" selected disabled>---Bitte  w&auml;hlen---</option>
-					<option ng-repeat="season in seasons | orderBy:'seasonName'" value="{{season.id}}"> {{season.seasonName}} </option>
-					<option value="-1"> Saison hinzuf&uuml;gen...</option>
-				</select> </span>
+				<select ng-model="selectedSeason" ng-change="seasonHasChanged()" 
+					ng-options="option.id as option.seasonName for option in seasons">
+				</select>
+			</span>
 			<span id="matchdaySelectDiv" ng-show="isSeasonSelected"> Spieltag:
 				<select ng-options="day.name for day in matchdays" ng-model="selectedMatchday"
 				ng-change="printSelectedMatchday()" >

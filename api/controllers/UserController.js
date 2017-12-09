@@ -17,12 +17,12 @@ var addPointsForUser = function(season){
 		Bet.find({user:user.id,season:season})
 		.then(function(bets){
 			bets.forEach(function(bet){			// For all bets for a user
-				var betPoints = +bet._points();	// sum up the points
+				var betPoints = +bet.cachedPoints;	// sum up the points
 				if( isNaN(betPoints) ){			// and skip NaNs
 					return;
 				}
 				pointCounterObject.points += betPoints;
-				switch (+bet._points()) { //unary + means cast to integer
+				switch (+bet.cachedPoints) { //unary + means cast to integer
 				case 5:
 					pointCounterObject.nCorrect += 1;
 					break;

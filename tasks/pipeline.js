@@ -17,6 +17,7 @@
 var cssFilesToInject = [
 	'vendor/bootstrap/dist/css/bootstrap.css',
 	'vendor/bootstrap/dist/css/bootstrap-theme.css',
+	'vendor/font-awesome-animation/dist/font-awesome-animation.css',
   'styles/**/*.css'
 ];
 

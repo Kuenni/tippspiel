@@ -33,8 +33,10 @@
 				role="tabpanel" aria-labelledby="headingBets">
 					<div class="panel-body" id="resultsTable">
 						<div id="storeButtons" class="col-md-2 col-md-offset-10 text-right">
-							<button class="btn btn-sm btn-success" ng-click="storeUpdates()" >
-								Speichern
+							<button class="btn btn-sm btn-success" ng-click="storeUpdates()" id="storeButton"
+								ng-class="{ 'btn-warning' : loading == true }" >
+								<span ng-if='loading' class='fa fa-spinner fa-spin animated'></span>
+									{{storeButtonText}}
 							</button>
 						</div>
 						<div id="resultsTable">

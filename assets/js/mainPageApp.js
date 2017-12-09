@@ -7,6 +7,7 @@ mainPageApp.controller('MainPageController', function($scope, $http, $log, $uibM
 	
 	$scope.isSeasonSelected = false;
 	$scope.selectedMatchday = {"name":"1. Spieltag","value":"1"};
+	$scope.storeButtonText = "Speichern";
 	
 	/*
 	 * Create list of matchdays for selector
@@ -171,15 +172,21 @@ mainPageApp.controller('MainPageController', function($scope, $http, $log, $uibM
 	 * when all bets are processed
 	 */
 	$scope.storeUpdates = function(){
+		$scope.loading = true;
+		var btn =  $('#storeButton');
+		$scope.button = true;
+		$scope.storeButtonText = "Moment";
+		
 		var betsToUpdate = $scope.bets.filter(betNonEmpty);
 		var betsLeft = betsToUpdate;
 		betsToUpdate.forEach(function(bet){
-			if(bet.betHome)
 			$http.post('/bet/' + bet.id,
 					bet ).then(function(data){
 						betsLeft -= 1;
 						if(!betsLeft){
 							$scope.printSelectedMatchday();
+							$scope.loading = false;
+							$scope.storeButtonText = "Speichern";
 							getTimeline();
 						}
 					},

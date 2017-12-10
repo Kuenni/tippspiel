@@ -1,4 +1,5 @@
 var request = require('request');
+var headers = "content-type : application/json";
 
 module.exports = {
 
@@ -9,7 +10,8 @@ module.exports = {
 			var urlToCheck = "http://www.openligadb.de/api/getmatchdata/" 
 				+ match.season.leagueShortcut + "/" + match.season.leagueSeason + "/" + match.matchday;
 			request.get({
-				url: urlToCheck
+				url: urlToCheck,
+				headers : headers
 			}, function(error, response, body) {
 				if (error) {
 					sails.log.error("LigaDbCaller - getResult: Error in get Request");
@@ -57,10 +59,13 @@ module.exports = {
 		 * Get the current matchday for the given season
 		 */
 		getCurrentMatchday : function(season, callback){
+			
 			//TODO: Catch undefined season
 			var url = "http://www.openligadb.de/api/getcurrentgroup/" + season.leagueShortcut;
-			request.get(
-				{url : url}
+			request.get({
+				url : url,
+				headers : headers
+				}
 				, function(error, response, body){
 					if(error){
 						sails.log.error(error);
